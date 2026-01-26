@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Academy extends Authenticatable implements JWTSubject
 {
+    use SoftDeletes;
     protected $fillable = [
         'name',
         'email',
@@ -47,5 +50,20 @@ class Academy extends Authenticatable implements JWTSubject
         return [
             'guard' => 'academy',
         ];
+    }
+
+    public function academicSetting(): HasOne
+    {
+        return $this->hasOne(AcademyAcademicSetting::class);
+    }
+
+    public function generalSetting(): HasOne
+    {
+        return $this->hasOne(AcademyGeneralSetting::class);
+    }
+
+    public function notificationSetting(): HasOne
+    {
+        return $this->hasOne(AcademyNotificationSetting::class);
     }
 }
