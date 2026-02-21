@@ -3,10 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Admin extends Authenticatable implements JWTSubject
 {
+    use HasRoles;
+
+    protected $guard_name = 'admin';
+
     protected $fillable = [
         'name',
         'email',

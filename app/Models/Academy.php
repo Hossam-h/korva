@@ -18,6 +18,10 @@ class Academy extends Authenticatable implements JWTSubject
         'country',
         'city',
         'address',
+        'business_owner_email',
+        'business_owner_phone',
+        'is_active',
+        'status',
         'password',
     ];
 
@@ -39,6 +43,14 @@ class Academy extends Authenticatable implements JWTSubject
     {
         return $this->getKey();
     }
+
+
+    
+
+    // public function getJWTCustomClaims()
+    // {
+    //     return [];
+    // }
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.

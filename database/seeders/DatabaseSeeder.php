@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             AcademySeeder::class,
             PlayerSeeder::class,
+            RolePermissionSeeder::class,
         ]);
     }
 }

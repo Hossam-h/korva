@@ -13,20 +13,21 @@ return new class extends Migration
     {
         Schema::create('academies', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('phone');
-          
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+
             $table->string('age_group')->nullable();
 
-            $table->string('country');
-            $table->string('city');
-            $table->string('address');
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
+            $table->string('address')->nullable();
 
-            $table->string('business_owner_email');
-            $table->string('business_owner_phone');
+            $table->string('business_owner_email')->nullable();
+            $table->string('business_owner_phone')->nullable();
 
             $table->boolean('is_active')->default(false);
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
 
             $table->softDeletes();
 
