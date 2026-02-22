@@ -29,6 +29,8 @@ return new class extends Migration
             $table->boolean('is_active')->default(false);
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
 
+           $table->enum('attachments_status', ['pending', 'approved', 'rejected','problem'])->default('pending');
+
             $table->softDeletes();
 
             $table->timestamps();

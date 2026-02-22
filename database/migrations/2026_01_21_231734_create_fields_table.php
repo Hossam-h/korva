@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('academy_id')->constrained('academies')->onDelete('cascade');
             $table->string('name');
             $table->enum('type', ['indoor', 'outdoor']);
-            
+
             $table->enum('status', ['available', 'unavailable', 'maintenance'])
-                  ->default('available');
+                ->default('available');
 
             $table->time('available_from');
             $table->time('available_to');

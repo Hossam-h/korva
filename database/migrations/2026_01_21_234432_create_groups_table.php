@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('academy_id')->constrained()->onDelete('cascade');
             $table->foreignId('field_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('training_category'); 
+            $table->string('training_category');
             $table->string('color_code')->nullable();
             $table->time('start_time');
             $table->time('end_time');

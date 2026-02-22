@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasFileAttachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+
 class AcademyAttach extends Model
 {
-    //
+    use HasFileAttachment;
 
     protected $fillable = [
         'academy_id',
@@ -25,6 +27,16 @@ class AcademyAttach extends Model
 
     public function getFullAttachPathAttribute()
     {
-        return Storage::url($this->attach_path);
+        return $this->attach_path ? Storage::url($this->attach_path) : null;
+    }
+
+    protected function getFileFields(): array
+    {
+        return ['attach_path'];
+    }
+
+    protected function getDefaultFolder(): string
+    {
+        return 'academy_attaches';
     }
 }

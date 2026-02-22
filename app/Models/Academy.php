@@ -78,4 +78,19 @@ class Academy extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(AcademyNotificationSetting::class);
     }
+
+    public function attaches()
+    {
+        return $this->hasMany(AcademyAttach::class);
+    }
+
+    public function fields()
+    {
+        return $this->hasMany(Field::class);
+    }
+
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
 }

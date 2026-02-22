@@ -22,15 +22,20 @@ class OnBoardingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
-            'age_group' => 'required',
-            'country' => 'required',
-            'city' => 'required',
-            'address' => 'required',
+            'name'                 => 'required',
+            'email'                => 'required',
+            'phone'                => 'required',
+            'age_group'            => 'required',
+            'country'              => 'required',
+            'city'                 => 'required',
+            'address'              => 'required',
             'business_owner_email' => 'required',
             'business_owner_phone' => 'required',
+
+            // Attachments (optional array)
+            'attachments'                 => 'sometimes|array',
+            'attachments.*.attach_type'   => 'required_with:attachments|string',
+            'attachments.*.attach_path'   => 'required_with:attachments|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
         ];
     }
 }

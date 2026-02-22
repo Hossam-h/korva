@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToAcademy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Group extends Model
 {
+    use BelongsToAcademy;
+
     protected $fillable = [
         'academy_id',
         'field_id',
@@ -22,14 +25,6 @@ class Group extends Model
     protected $casts = [
         'days' => 'array',
     ];
-
-    /**
-     * Get the academy that owns the group.
-     */
-    public function academy(): BelongsTo
-    {
-        return $this->belongsTo(Academy::class);
-    }
 
     /**
      * Get the field that owns the group.

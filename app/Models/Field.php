@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToAcademy;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Field extends Model
 {
+    use BelongsToAcademy;
+
     protected $fillable = [
         'academy_id',
         'name',
@@ -22,12 +24,4 @@ class Field extends Model
         'available_to' => 'datetime:H:i',
         'day_of_week' => 'array',
     ];
-
-    /**
-     * Get the academy that owns the field.
-     */
-    public function academy(): BelongsTo
-    {
-        return $this->belongsTo(Academy::class);
-    }
 }
