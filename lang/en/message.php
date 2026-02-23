@@ -27,4 +27,12 @@ return [
     'group_updated'    => 'Group updated successfully.',
     'group_deleted'    => 'Group deleted successfully.',
     'group_not_found'  => 'Group not found.',
+
+    // Coaches
+    'coaches_retrieved' => 'Coaches retrieved successfully.',
+    'coach_retrieved'   => 'Coach retrieved successfully.',
+    'coach_created'     => 'Coach created successfully.',
+    'coach_updated'     => 'Coach updated successfully.',
+    'coach_deleted'     => 'Coach deleted successfully.',
+    'coach_not_found'   => 'Coach not found.',
 ];

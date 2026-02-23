@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Academy\AuthController;
+use App\Http\Controllers\Api\Academy\CoachController;
 use App\Http\Controllers\Api\Academy\FieldController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,5 +26,8 @@ Route::group([
 
         // Groups
         Route::apiResource('groups', GroupController::class);
+
+        // Coaches
+        Route::apiResource('coaches', CoachController::class);
     });
 });

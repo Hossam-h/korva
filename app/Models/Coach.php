@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToAcademy;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Coach extends Model
 {
+    use BelongsToAcademy;
+
     protected $fillable = [
         'academy_id',
         'full_name',
@@ -18,10 +20,6 @@ class Coach extends Model
         'bio',
     ];
 
-    public function academy(): BelongsTo
-    {
-        return $this->belongsTo(Academy::class);
-    }
 
     public function groups(): BelongsToMany
     {

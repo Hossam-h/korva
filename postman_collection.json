@@ -1187,6 +1187,160 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "Coaches",
+                    "item": [
+                        {
+                            "name": "List Coaches",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/coaches",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "coaches"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Coach",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"full_name\": \"Ahmed Ali\",\n    \"phone\": \"+201234567890\",\n    \"email\": \"ahmed@example.com\",\n    \"training_category\": \"Football\",\n    \"bio\": \"Experienced football coach with 10 years of training.\",\n    \"group_ids\": [1, 2],\n    \"licenses\": [\n        {\n            \"license_name\": \"UEFA B\",\n            \"issuing_authority\": \"FAE\",\n            \"obtained_at\": \"2022-06-01\"\n        }\n    ],\n    \"tournaments\": [\n        {\n            \"tournament_name\": \"Arab Cup 2023\",\n            \"achievement\": \"3rd Place\",\n            \"tournament_date\": \"2023-08-15\"\n        }\n    ]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/coaches",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "coaches"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show Coach",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/coaches/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "coaches",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Coach",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"full_name\": \"Ahmed Ali Updated\",\n    \"training_category\": \"Basketball\",\n    \"group_ids\": [2],\n    \"licenses\": [\n        {\n            \"license_name\": \"UEFA A\",\n            \"issuing_authority\": \"CAF\",\n            \"obtained_at\": \"2024-01-10\"\n        }\n    ],\n    \"tournaments\": [\n        {\n            \"tournament_name\": \"Africa Cup 2024\",\n            \"achievement\": \"Winner\",\n            \"tournament_date\": \"2024-03-20\"\n        }\n    ]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/coaches/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "coaches",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Coach",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/coaches/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "coaches",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
                 }
             ]
         },
