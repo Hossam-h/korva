@@ -19,6 +19,8 @@ class Player extends Authenticatable implements JWTSubject
         'weight',
         'has_health_issues',
         'health_issues',
+        'group_id',
+        'period',
         'password',
     ];
 
@@ -49,13 +51,21 @@ class Player extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [
-            'guard' => 'player',
-        ];
+        return [];
     }
 
     public function academy()
     {
         return $this->belongsTo(Academy::class);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
     }
 }

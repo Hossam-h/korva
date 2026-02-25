@@ -59,9 +59,7 @@ class Academy extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [
-            'guard' => 'academy',
-        ];
+        return [];
     }
 
     public function academicSetting(): HasOne

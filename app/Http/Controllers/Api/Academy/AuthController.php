@@ -8,11 +8,11 @@ use App\Http\Requests\Academy\CheckOtp;
 use App\Http\Requests\Academy\OnBoardingRequest;
 use App\Models\Academy;
 use App\Models\AcademyAttach;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends BaseController
 {
@@ -29,7 +29,6 @@ class AuthController extends BaseController
         }
     }
 
-
     public function checkOtp(CheckOtp $request)
     {
         $contactNumber = $request->contact_number;
@@ -43,12 +42,12 @@ class AuthController extends BaseController
             if ($data) {
                 // Check for existing user including soft-deleted ones
                 $checkUserExists = Academy::withTrashed()
-                    ->where('contact_number', $request['contact_number'])
+                    ->where('phone', $request['contact_number'])
                     ->first();
 
-                if (!$checkUserExists) {
+                if (! $checkUserExists) {
                     $academy = Academy::create([
-                        'contact_number' => $request['contact_number'],
+                        'phone' => $request['contact_number'],
                     ]);
                 }
 
@@ -65,31 +64,30 @@ class AuthController extends BaseController
             return $this->sendError(__('message.otp_invalid'), 401);
         }
 
-        $user = auth('academy')->user() ?? null;
+        $user = auth('academy')->user();
 
-        if (isset($user)) {
+        if (! $user) {
             return $this->sendError(__('message.credential_invalid'), 401);
         }
 
-        $user['token'] = isset($token) ? $token : null;
-
-        return $this->sendResponse($user, __('message.login success'));
+        return $this->sendResponse([
+            'token' => $token ?? null,
+        ], __('message.login success'));
     }
-
 
     public function getToken($data, $type = null)
     {
         if ($type == 'email') {
             $user = Auth::guard('academy')->getProvider()->retrieveByCredentials([
-                'email' => $data['email'], 'user_type' => $data['user_type']
+                'email' => $data['email'],
             ]);
         } else {
             $user = Auth::guard('academy')->getProvider()->retrieveByCredentials([
-                'contact_number' => $data['contact_number'], 'user_type' => $data['user_type']
+                'phone' => $data['contact_number'],
             ]);
         }
 
-        if (!$user) {
+        if (! $user) {
             return $this->sendError(__('message.credential_invalid'), 401);
         }
 
@@ -99,19 +97,18 @@ class AuthController extends BaseController
         return $jwtToken;
     }
 
-
     public function onBoarding(OnBoardingRequest $request)
     {
         $academy = auth('academy')->user();
 
         $academy->update([
-            'name'                 => $request->name,
-            'email'                => $request->email,
-            'phone'                => $request->phone,
-            'age_group'            => $request->age_group,
-            'country'              => $request->country,
-            'city'                 => $request->city,
-            'address'              => $request->address,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'age_group' => $request->age_group,
+            'country' => $request->country,
+            'city' => $request->city,
+            'address' => $request->address,
             'business_owner_email' => $request->business_owner_email,
             'business_owner_phone' => $request->business_owner_phone,
         ]);
@@ -120,7 +117,7 @@ class AuthController extends BaseController
         if ($request->has('attachments')) {
             foreach ($request->attachments as $item) {
                 $attach = AcademyAttach::create([
-                    'academy_id'  => $academy->id,
+                    'academy_id' => $academy->id,
                     'attach_type' => $item['attach_type'],
                     'attach_path' => '', // will be updated by uploadFile()
                 ]);
@@ -135,14 +132,12 @@ class AuthController extends BaseController
         );
     }
 
-
-
     public function forgetPassword(ForgetPasswordRequest $request)
     {
 
-        $academy = Academy::where('contact_number', $request->contact_number)->first();
+        $academy = Academy::where('phone', $request->contact_number)->first();
 
-        if (!$academy) {
+        if (! $academy) {
             return $this->sendError(__('message.user_not_found'), 404);
         }
 
@@ -155,7 +150,6 @@ class AuthController extends BaseController
         }
     }
 
-
     public function checkForgetOtp(CheckOtpForgetRequest $request)
     {
         $contactNumber = $request->contact_number;
@@ -164,22 +158,20 @@ class AuthController extends BaseController
 
         // Check if OTP exists in global array or in cache with key
         if (in_array($request['otp'], Cache::get('otps', [])) || $data) {
-            Cache::forget($key);     
-        }else{
+            Cache::forget($key);
+        } else {
             return $this->sendError(__('message.otp_invalid'), 401);
         }
 
-      
         return $this->sendResponse([], __('message.otp_valid'));
     }
-
 
     public function resetPassword(ResetPasswordRequest $request)
     {
 
         $academy = Academy::where('contact_number', $request->contact_number)->first();
 
-        if (!$academy) {
+        if (! $academy) {
             return $this->sendError(__('message.user_not_found'), 404);
         }
 
@@ -189,6 +181,4 @@ class AuthController extends BaseController
 
         return $this->sendResponse($academy, __('message.password_reset_success'));
     }
-    
-
 }

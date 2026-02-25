@@ -1341,13 +1341,162 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "Players",
+                    "item": [
+                        {
+                            "name": "List Players",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/players",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "players"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Player",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"first_name\": \"Mohamed\",\n    \"last_name\": \"Ali\",\n    \"email\": \"player@example.com\",\n    \"phone\": \"+201234567890\",\n    \"gender\": \"male\",\n    \"type\": \"goalkeeper\",\n    \"address\": \"123 Main Street, Cairo\",\n    \"birth_date\": \"2005-06-15\",\n    \"weight\": 65.5,\n    \"has_health_issues\": false,\n    \"health_issues\": null,\n    \"password\": \"password123\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/players",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "players"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show Player",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/players/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "players",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Player",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"first_name\": \"Mohamed\",\n    \"last_name\": \"Updated\",\n    \"weight\": 68,\n    \"address\": \"456 New Street, Cairo\",\n    \"has_health_issues\": true,\n    \"health_issues\": \"Mild asthma\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/players/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "players",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Player",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/players/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "players",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
                 }
             ]
-        },
-        {
-            "name": "Player",
-            "description": "All player guard endpoints (to be added).",
-            "item": []
         }
     ]
 }

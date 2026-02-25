@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Academy\AuthController;
 use App\Http\Controllers\Api\Academy\CoachController;
 use App\Http\Controllers\Api\Academy\FieldController;
+use App\Http\Controllers\Api\Academy\PlayerController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -29,5 +30,8 @@ Route::group([
 
         // Coaches
         Route::apiResource('coaches', CoachController::class);
+
+        // Players
+        Route::apiResource('players', PlayerController::class);
     });
 });

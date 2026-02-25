@@ -35,4 +35,12 @@ return [
     'coach_updated'     => 'Coach updated successfully.',
     'coach_deleted'     => 'Coach deleted successfully.',
     'coach_not_found'   => 'Coach not found.',
+
+    // Players
+    'players_retrieved' => 'Players retrieved successfully.',
+    'player_retrieved'  => 'Player retrieved successfully.',
+    'player_created'    => 'Player created successfully.',
+    'player_updated'    => 'Player updated successfully.',
+    'player_deleted'    => 'Player deleted successfully.',
+    'player_not_found'  => 'Player not found.',
 ];

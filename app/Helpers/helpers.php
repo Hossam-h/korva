@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Http;
 
-if (!function_exists('send')) {
+if (! function_exists('send')) {
     /**
      * Send OTP via SMS first, fallback to WhatsApp if SMS fails
-     * @param string $contactNumber Full phone number with country code
+     *
+     * @param  string  $contactNumber  Full phone number with country code
      * @return bool
      */
     function send($contactNumber)
@@ -18,18 +19,19 @@ if (!function_exists('send')) {
         }
 
         // Fallback to WhatsApp if SMS fails
-        \Log::info('SMS OTP failed, trying WhatsApp fallback for: ' . $contactNumber);
+        \Log::info('SMS OTP failed, trying WhatsApp fallback for: '.$contactNumber);
         $whatsappResult = sendOtpViaChannel($contactNumber, 'whatsapp');
 
         return $whatsappResult;
     }
 }
 
-if (!function_exists('sendOtpViaChannel')) {
+if (! function_exists('sendOtpViaChannel')) {
     /**
      * Send OTP via specified channel (whatsapp or sms)
-     * @param string $contactNumber Full phone number with country code
-     * @param string $channel 'whatsapp' or 'sms'
+     *
+     * @param  string  $contactNumber  Full phone number with country code
+     * @param  string  $channel  'whatsapp' or 'sms'
      * @return bool
      */
     function sendOtpViaChannel($contactNumber, $channel = 'whatsapp')
@@ -39,11 +41,11 @@ if (!function_exists('sendOtpViaChannel')) {
                 'beon-token' => env('BEON_TOKEN'),
             ])->post(env('BEON_URL'), [
                 'phoneNumber' => $contactNumber,
-                'name'        => env('APP_NAME', 'Eyvar'),
-                'type'        => $channel, // 'whatsapp' or 'sms'
-                'otp_length'  => 4,
-                'lang'        => 'en',
-                'reference'   => rand(100, 999),
+                'name' => env('APP_NAME', 'Eyvar'),
+                'type' => $channel, // 'whatsapp' or 'sms'
+                'otp_length' => 4,
+                'lang' => 'en',
+                'reference' => rand(100, 999),
             ]);
 
             // Check response
@@ -55,18 +57,54 @@ if (!function_exists('sendOtpViaChannel')) {
                     $otp = $responseData['data']['otp'];
                     generateOtp($contactNumber, $otp);
                     \Log::info("OTP sent successfully via {$channel} to: {$contactNumber} - OTP: {$otp}");
+
                     return true;
                 } else {
-                    \Log::error("{$channel} OTP Response missing OTP data: " . json_encode($responseData));
+                    \Log::error("{$channel} OTP Response missing OTP data: ".json_encode($responseData));
+
                     return false;
                 }
             } else {
-                \Log::error("{$channel} OTP API Error for {$contactNumber}: " . $response->body());
+                \Log::error("{$channel} OTP API Error for {$contactNumber}: ".$response->body());
+
                 return false;
             }
         } catch (\Exception $e) {
-            \Log::error("{$channel} OTP Exception for {$contactNumber}: " . $e->getMessage());
+            \Log::error("{$channel} OTP Exception for {$contactNumber}: ".$e->getMessage());
+
             return false;
         }
     }
+
+    if (! function_exists('generateOtp')) {
+        function generateOtp($contactNumber, $otp)
+        {
+            $timeDelay = now()->addMinutes(30);
+
+            // Ensure OTP is a string for consistent comparison
+            $otp = (string) $otp;
+
+            // Get existing OTPs from cache (don't overwrite them!)
+            $otps = Cache::get('otps', []);
+
+            // Add new OTP to the array (avoid duplicates) - store as string
+            if (! in_array($otp, $otps, true)) {
+                $otps[] = $otp;
+            }
+
+            // Store the updated OTPs array
+            Cache::put('otps', $otps, $timeDelay);
+
+            // Store OTP with contact number as key for verification
+            Cache::put($contactNumber.'_'.$otp, $otp, $timeDelay);
+
+            \Log::info('OTP stored', [
+                'contact' => $contactNumber,
+                'otp' => $otp,
+                'cache_key' => $contactNumber.'_'.$otp,
+                'expires_at' => $timeDelay->toDateTimeString(),
+            ]);
+        }
+    }
+
 }
