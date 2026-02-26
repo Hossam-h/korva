@@ -1495,6 +1495,496 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "Performance Trials",
+                    "item": [
+                        {
+                            "name": "List Performance Trials",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/performance-trials",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "performance-trials"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Performance Trial",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "title",
+                                            "value": "U12 Trial Session",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "age_category",
+                                            "value": "U12",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "max_players",
+                                            "value": "20",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "start_date",
+                                            "value": "2026-03-15",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "start_time",
+                                            "value": "09:00",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "end_time",
+                                            "value": "11:00",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "status",
+                                            "value": "active",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "day_of_week[]",
+                                            "value": "monday",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "day_of_week[]",
+                                            "value": "wednesday",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "thumbnail",
+                                            "src": "",
+                                            "type": "file"
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/performance-trials",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "performance-trials"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show Performance Trial",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/performance-trials/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "performance-trials",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Performance Trial",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    },
+                                    {
+                                        "key": "X-HTTP-Method-Override",
+                                        "value": "PUT"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "_method",
+                                            "value": "PUT",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "title",
+                                            "value": "Updated Trial Session",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "max_players",
+                                            "value": "25",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "status",
+                                            "value": "active",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "thumbnail",
+                                            "src": "",
+                                            "type": "file"
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/performance-trials/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "performance-trials",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Performance Trial",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/performance-trials/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "performance-trials",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Academic Setting",
+                    "item": [
+                        {
+                            "name": "Update Academic Setting",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"work_days\": [\"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\"],\n    \"morning_start\": \"09:00\",\n    \"morning_end\": \"14:00\",\n    \"has_evening\": true,\n    \"evening_start\": \"17:00\",\n    \"evening_end\": \"21:00\",\n    \"age_ranges\": [\"U8\", \"U10\", \"U12\", \"U14\", \"U16\"]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/academic-setting",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "academic-setting"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "General Setting",
+                    "item": [
+                        {
+                            "name": "Update General Setting",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"language\": \"ar\",\n    \"timezone\": \"Asia/Riyadh\",\n    \"phone\": \"+201234567890\",\n    \"email\": \"academy@example.com\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/general-setting",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "general-setting"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Payment Methods",
+                    "item": [
+                        {
+                            "name": "List Payment Methods",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/payment-methods",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "payment-methods"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Payment Method",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"provider_id\": 1,\n    \"holder_name\": \"Ahmed Ali\",\n    \"card_number\": \"4111111111111111\",\n    \"expiry_date\": \"12/27\",\n    \"cvv\": \"123\",\n    \"is_default\": true,\n    \"status\": \"active\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/payment-methods",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "payment-methods"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show Payment Method",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/payment-methods/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "payment-methods",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Payment Method",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"holder_name\": \"Mohamed Ali\",\n    \"expiry_date\": \"06/28\",\n    \"status\": \"active\",\n    \"is_default\": false\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/academy/payment-methods/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "payment-methods",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Payment Method",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/payment-methods/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "payment-methods",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Payment Providers",
+                    "item": [
+                        {
+                            "name": "List Payment Providers",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{academy_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/academy/payment-providers",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "academy",
+                                        "payment-providers"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
                 }
             ]
         }

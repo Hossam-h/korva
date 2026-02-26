@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('academy_id')->constrained('academies')->onDelete('cascade');
             $table->foreignId('provider_id')->constrained('payment_providers')->onDelete('cascade');
             $table->boolean('is_default')->default(false);
+            $table->string('holder_name');
+            $table->string('card_number');
+            $table->string('expiry_date');
+            $table->string('cvv');
             $table->enum('status', ['active', 'disabled', 'expired'])->default('active');
             $table->timestamps();
         });

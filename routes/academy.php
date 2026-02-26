@@ -1,8 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\Academy\AcademyAcademicSettingController;
+use App\Http\Controllers\Api\Academy\AcademyGeneralSettingController;
 use App\Http\Controllers\Api\Academy\AuthController;
 use App\Http\Controllers\Api\Academy\CoachController;
 use App\Http\Controllers\Api\Academy\FieldController;
+use App\Http\Controllers\Api\Academy\PaymentMethodController;
+use App\Http\Controllers\Api\Academy\PaymentProviderController;
+use App\Http\Controllers\Api\Academy\PerformanceTrialController;
 use App\Http\Controllers\Api\Academy\PlayerController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,5 +38,20 @@ Route::group([
 
         // Players
         Route::apiResource('players', PlayerController::class);
+
+        // Performance Trials
+        Route::apiResource('performance-trials', PerformanceTrialController::class);
+
+        // Academic Settings
+        Route::put('academic-setting', [AcademyAcademicSettingController::class, 'update']);
+
+        // General Settings
+        Route::put('general-setting', [AcademyGeneralSettingController::class, 'update']);
+
+        // Payment Methods
+        Route::apiResource('payment-methods', PaymentMethodController::class);
+
+        // Payment Providers
+        Route::get('payment-providers', [PaymentProviderController::class, 'index']);
     });
 });

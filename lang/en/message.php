@@ -43,4 +43,29 @@ return [
     'player_updated'    => 'Player updated successfully.',
     'player_deleted'    => 'Player deleted successfully.',
     'player_not_found'  => 'Player not found.',
+
+    // Performance Trials
+    'performance_trials_retrieved'  => 'Performance trials retrieved successfully.',
+    'performance_trial_retrieved'   => 'Performance trial retrieved successfully.',
+    'performance_trial_created'     => 'Performance trial created successfully.',
+    'performance_trial_updated'     => 'Performance trial updated successfully.',
+    'performance_trial_deleted'     => 'Performance trial deleted successfully.',
+    'performance_trial_not_found'   => 'Performance trial not found.',
+
+    // Academic Settings
+    'academic_setting_updated'   => 'Academic setting updated successfully.',
+
+    // General Settings
+    'general_setting_updated'    => 'General setting updated successfully.',
+
+    // Payment Methods
+    'payment_methods_retrieved'  => 'Payment methods retrieved successfully.',
+    'payment_method_retrieved'   => 'Payment method retrieved successfully.',
+    'payment_method_created'     => 'Payment method created successfully.',
+    'payment_method_updated'     => 'Payment method updated successfully.',
+    'payment_method_deleted'     => 'Payment method deleted successfully.',
+    'payment_method_not_found'   => 'Payment method not found.',
+
+    // Payment Providers
+    'payment_providers_retrieved' => 'Payment providers retrieved successfully.',
 ];

@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             AcademySeeder::class,
             PlayerSeeder::class,
             RolePermissionSeeder::class,
+            PaymentProviderSeeder::class,
         ]);
     }
 }
