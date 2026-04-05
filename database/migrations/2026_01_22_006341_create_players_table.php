@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email');
-            $table->string('phone');
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->enum('type', ['parent', 'player']);
 
@@ -33,7 +33,7 @@ return new class extends Migration
 
 
             $table->string('period')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
 
             $table->timestamps();
         });

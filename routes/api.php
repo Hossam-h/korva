@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AcademyController;
 use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\RolePermissionController;
+use App\Http\Controllers\Api\GeospatialController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -38,4 +39,26 @@ Route::group([
         Route::put('academies/{academy}', [AcademyController::class, 'update']);
         Route::patch('academies/{academy}/status', [AcademyController::class, 'changeStatus']);
     });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Geospatial / Driver Location Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('geo')->group(function () {
+    // Seed test data
+    Route::post('seed', [GeospatialController::class, 'seedTestData']);
+
+    // Flush all driver locations
+    Route::delete('flush', [GeospatialController::class, 'flush']);
+
+    // Driver location CRUD
+    Route::post('drivers/{driver}/location', [GeospatialController::class, 'updateDriverLocation']);
+    Route::get('drivers/{driver}/position', [GeospatialController::class, 'getDriverPosition']);
+    Route::delete('drivers/{driver}', [GeospatialController::class, 'removeDriver']);
+
+    // Search & distance
+    Route::get('drivers/nearest', [GeospatialController::class, 'findNearestDrivers']);
+    Route::get('drivers/distance', [GeospatialController::class, 'getDistance']);
 });

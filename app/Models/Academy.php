@@ -91,4 +91,14 @@ class Academy extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Group::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(AcademyReview::class);
+    }
+
+    public function coaches()
+    {
+        return $this->hasMany(Coach::class);
+    }
 }

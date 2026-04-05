@@ -1987,6 +1987,431 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "Player",
+            "description": "All player guard endpoints — auth, registration with OTP (email or phone).",
+            "item": [
+                {
+                    "name": "Auth",
+                    "item": [
+                        {
+                            "name": "Register (Send OTP)",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"contact\": \"player@example.com\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/player/register",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "register"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Check OTP",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": [
+                                            "var jsonData = pm.response.json();",
+                                            "if (jsonData.data && jsonData.data.access_token) {",
+                                            "    pm.collectionVariables.set('player_token', jsonData.data.access_token);",
+                                            "}"
+                                        ]
+                                    }
+                                }
+                            ],
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"contact\": \"player@example.com\",\n    \"otp\": \"1234\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/player/check-otp",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "check-otp"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Login",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": [
+                                            "var jsonData = pm.response.json();",
+                                            "if (jsonData.data && jsonData.data.access_token) {",
+                                            "    pm.collectionVariables.set('player_token', jsonData.data.access_token);",
+                                            "}"
+                                        ]
+                                    }
+                                }
+                            ],
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"login\": \"player@example.com\",\n    \"password\": \"password123\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/player/login",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "login"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Set Password",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/player/set-password",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "set-password"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Complete Profile",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"first_name\": \"Mohamed\",\n    \"last_name\": \"Ali\",\n    \"gender\": \"male\",\n    \"type\": \"player\",\n    \"address\": \"123 Main Street, Cairo\",\n    \"birth_date\": \"2005-06-15\",\n    \"weight\": 65.5,\n    \"has_health_issues\": false,\n    \"health_issues\": null\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/player/complete-profile",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "complete-profile"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Me",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Refresh Token",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": [
+                                            "var jsonData = pm.response.json();",
+                                            "if (jsonData.data && jsonData.data.access_token) {",
+                                            "    pm.collectionVariables.set('player_token', jsonData.data.access_token);",
+                                            "}"
+                                        ]
+                                    }
+                                }
+                            ],
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/refresh",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "refresh"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Logout",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/logout",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "logout"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Home",
+                    "item": [
+                        {
+                            "name": "Home Page",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/home",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "home"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Academies",
+                    "item": [
+                        {
+                            "name": "Search Academies",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/academies/search?q=football&city=Cairo",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "academies",
+                                        "search"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "football"
+                                        },
+                                        {
+                                            "key": "city",
+                                            "value": "Cairo"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show Academy",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/academies/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "academies",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Review Academy",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"rating\": 5,\n    \"comment\": \"Great academy! highly recommended.\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/player/academies/1/review",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "academies",
+                                        "1",
+                                        "review"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
