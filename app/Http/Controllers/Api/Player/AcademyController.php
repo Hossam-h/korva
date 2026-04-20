@@ -65,7 +65,7 @@ class AcademyController extends BaseController
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(Academy $academy)
-    {academies
+    {
         $academy->load('groups', 'coaches');
         $academy->loadAvg('reviews', 'rating');
         return $this->sendResponse($academy, 'Academy retrieved successfully');

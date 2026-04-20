@@ -29,6 +29,7 @@ class PlayerSeeder extends Seeder
                 'health_issues' => null,
                 'password' => Hash::make('password'),
             ],
+            
             [
                 'first_name' => 'فاطمة',
                 'last_name' => 'علي',

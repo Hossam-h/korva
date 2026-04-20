@@ -2410,6 +2410,231 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "Bookings",
+                    "description": "Booking endpoints — create, list, view, cancel, confirm, and get available time slots.",
+                    "item": [
+                        {
+                            "name": "Create Booking (Single Session)",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"academy_id\": 1,\n    \"group_id\": 1,\n    \"booking_type\": \"single\",\n    \"session_date\": \"2025-08-26\",\n    \"session_start_time\": \"09:30\",\n    \"session_end_time\": \"11:30\",\n    \"player_ids\": [1, 2],\n    \"coupon_code\": null,\n    \"payment_method_type\": \"card\",\n    \"notes\": null\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/player/bookings",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "bookings"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Booking (Monthly Subscription)",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"academy_id\": 1,\n    \"group_id\": 1,\n    \"booking_type\": \"monthly\",\n    \"duration_months\": 3,\n    \"player_ids\": [1],\n    \"coupon_code\": \"ABC1234\",\n    \"payment_method_type\": \"card\",\n    \"notes\": null\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/player/bookings",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "bookings"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List My Bookings",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/bookings",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "bookings"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show Booking",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/bookings/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "bookings",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Cancel Booking",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/bookings/1/cancel",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "bookings",
+                                        "1",
+                                        "cancel"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Confirm Booking",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"payment_reference\": \"TXN_ABC123456\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/player/bookings/1/confirm",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "bookings",
+                                        "1",
+                                        "confirm"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Available Slots",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{player_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/player/groups/1/slots?date=2025-08-26",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "player",
+                                        "groups",
+                                        "1",
+                                        "slots"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "date",
+                                            "value": "2025-08-26"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
                 }
             ]
         }

@@ -20,6 +20,9 @@ class Group extends Model
         'start_time',
         'end_time',
         'days',
+        'session_price',
+        'monthly_price',
+        'capacity',
     ];
 
     protected $casts = [
@@ -40,5 +43,11 @@ class Group extends Model
     public function coaches(): BelongsToMany
     {
         return $this->belongsToMany(Coach::class, 'coach_group', 'group_id', 'coach_id');
+    }
+
+    /** All bookings made for this group. */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

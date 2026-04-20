@@ -101,4 +101,10 @@ class Academy extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Coach::class);
     }
+
+    /** All bookings received by this academy. */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Player\AcademyController;
 use App\Http\Controllers\Api\Player\AuthController;
+use App\Http\Controllers\Api\Player\BookingController;
 use App\Http\Controllers\Api\Player\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,5 +30,13 @@ Route::group([
         Route::get('academies/search', [AcademyController::class, 'search']);
         Route::get('academies/{academy}', [AcademyController::class, 'show']);
         Route::post('academies/{academy}/review', [AcademyController::class, 'addReview']);
+
+        // Bookings
+        Route::post('bookings', [BookingController::class, 'store']);
+        Route::get('bookings', [BookingController::class, 'index']);
+        Route::get('bookings/{id}', [BookingController::class, 'show']);
+        Route::post('bookings/{id}/cancel', [BookingController::class, 'cancel']);
+        Route::post('bookings/{id}/confirm', [BookingController::class, 'confirm']);
+        Route::get('groups/{groupId}/slots', [BookingController::class, 'availableSlots']);
     });
 });

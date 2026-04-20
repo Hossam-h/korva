@@ -25,7 +25,7 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->decimal('weight', 8, 2)->nullable();
 
-            $table->foreignId('group_id')->constrained('groups')->onDelete('cascade');
+            $table->foreignId('group_id')->nullable()->constrained('groups')->onDelete('cascade');
 
             $table->boolean('has_health_issues')->default(false);
 

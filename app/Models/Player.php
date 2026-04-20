@@ -64,6 +64,18 @@ class Player extends Authenticatable implements JWTSubject
         return $this->belongsTo(Group::class);
     }
 
+    /** Bookings this player created as the account holder (payer). */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    /** Booking slots where this player is a participant (child). */
+    public function bookingSlots()
+    {
+        return $this->hasMany(BookingPlayer::class);
+    }
+
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
