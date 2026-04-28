@@ -1,24 +1,23 @@
-version: '3.8'
-
 services:
 
   app:
     image: hossamdocker12/korva-app:latest
-    env_file:
-      - .env  
     restart: always
-
+    env_file:
+      - .env
+    volumes:
+      - app_files:/var/www/html/korva    # ← app copies files to volume
     depends_on:
       - mysql
       - redis
-    
+
   nginx:
     image: nginx:alpine
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - /var/www/html/korva:/var/www/html/korva
+      - app_files:/var/www/html/korva    # ← nginx reads from same volume
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     restart: always
     depends_on:
@@ -49,3 +48,4 @@ services:
 
 volumes:
   mysql_data:
+  app_files:
