@@ -16,6 +16,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
+      - /var/www/html/korva:/var/www/html/korva
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     restart: always
     depends_on:
