@@ -4,6 +4,8 @@ services:
 
   app:
     image: hossamdocker12/korva-app:latest
+    env_file:
+      - .env  
     restart: always
 
     depends_on:
