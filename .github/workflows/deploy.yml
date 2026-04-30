@@ -41,3 +41,6 @@ jobs:
             docker-compose -f docker-compose.prod.yml exec -T app php artisan config:cache
             docker-compose -f docker-compose.prod.yml exec -T app php artisan route:cache
             docker image prune -a -f 
+            docker-compose -f docker-compose.prod.yml down
+            docker-compose -f docker-compose.prod.yml up -d
+
