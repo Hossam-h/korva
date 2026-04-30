@@ -35,7 +35,6 @@ class AuthController extends BaseController
         $key = $contactNumber.'_'.$request['otp'];
         $data = Cache::get($key);
 
-        dd($key, $data);
 
         // Check if OTP exists in global array or in cache with key
         if (in_array($request['otp'], Cache::get('otps', [])) || $data) {
