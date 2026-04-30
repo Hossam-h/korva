@@ -12,11 +12,11 @@ if (! function_exists('send')) {
     function send($contactNumber)
     {
         // Try SMS first
-        $smsResult = sendOtpViaChannel($contactNumber, 'sms');
+        // $smsResult = sendOtpViaChannel($contactNumber, 'sms');
 
-        if ($smsResult) {
-            return true;
-        }
+        // if ($smsResult) {
+        //     return true;
+        // }
 
         // Fallback to WhatsApp if SMS fails
         \Log::info('SMS OTP failed, trying WhatsApp fallback for: '.$contactNumber);
