@@ -37,44 +37,50 @@ if (! function_exists('sendOtpViaChannel')) {
      */
     function sendOtpViaChannel($contactNumber, $channel = 'whatsapp')
     {
-        try {
-            $response = Http::withHeaders([
-                'beon-token' => env('BEON_TOKEN'),
-            ])->post(env('BEON_URL'), [
-                'phoneNumber' => $contactNumber,
-                'name' => env('APP_NAME', 'Eyvar'),
-                'type' => $channel, // 'whatsapp' or 'sms'
-                'otp_length' => 4,
-                'lang' => 'en',
-                'reference' => rand(100, 999),
-            ]);
 
-            // Check response
-            if ($response->successful()) {
-                $responseData = $response->json();
 
-                // Check if OTP exists in response
-                if (isset($responseData['data']['otp'])) {
-                    $otp = $responseData['data']['otp'];
-                    generateOtp($contactNumber, $otp);
-                    \Log::info("OTP sent successfully via {$channel} to: {$contactNumber} - OTP: {$otp}");
+        $otp = '1234'; // remove after testing
+        generateOtp($contactNumber, $otp);
 
-                    return true;
-                } else {
-                    \Log::error("{$channel} OTP Response missing OTP data: ".json_encode($responseData));
+        return true;
+        // try {
+        //     $response = Http::withHeaders([
+        //         'beon-token' => env('BEON_TOKEN'),
+        //     ])->post(env('BEON_URL'), [
+        //         'phoneNumber' => $contactNumber,
+        //         'name' => env('APP_NAME', 'Eyvar'),
+        //         'type' => $channel, // 'whatsapp' or 'sms'
+        //         'otp_length' => 4,
+        //         'lang' => 'en',
+        //         'reference' => rand(100, 999),
+        //     ]);
 
-                    return false;
-                }
-            } else {
-                \Log::error("{$channel} OTP API Error for {$contactNumber}: ".$response->body());
+        //     // Check response
+        //     if ($response->successful()) {
+        //         $responseData = $response->json();
 
-                return false;
-            }
-        } catch (\Exception $e) {
-            \Log::error("{$channel} OTP Exception for {$contactNumber}: ".$e->getMessage());
+        //         // Check if OTP exists in response
+        //         if (isset($responseData['data']['otp'])) {
+        //             $otp = $responseData['data']['otp'];
+        //             generateOtp($contactNumber, $otp);
+        //             \Log::info("OTP sent successfully via {$channel} to: {$contactNumber} - OTP: {$otp}");
 
-            return false;
-        }
+        //             return true;
+        //         } else {
+        //             \Log::error("{$channel} OTP Response missing OTP data: ".json_encode($responseData));
+
+        //             return false;
+        //         }
+        //     } else {
+        //         \Log::error("{$channel} OTP API Error for {$contactNumber}: ".$response->body());
+
+        //         return false;
+        //     }
+        // } catch (\Exception $e) {
+        //     \Log::error("{$channel} OTP Exception for {$contactNumber}: ".$e->getMessage());
+
+        //     return false;
+        // }
     }
 
     if (! function_exists('generateOtp')) {
