@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+use App\Http\Requests\Academy\ForgetPasswordRequest;
+use App\Http\Requests\Academy\CheckOtpForgetRequest;
+use App\Http\Requests\Academy\ResetPasswordRequest;
+use App\Http\Requests\Academy\AcademyLoginRequest;
 class AuthController extends BaseController
 {
     public function register(AcademyRegister $request)
@@ -27,6 +30,34 @@ class AuthController extends BaseController
         } else {
             $this->sendError(__('message.otp_send_failed_check_your_number_and_country_code'), 422);
         }
+    }
+
+    public function login(AcademyLoginRequest $request)
+    {
+        $login = $request->login;
+        $password = $request->password;
+
+        $credentials = [
+            'password' => $password,
+        ];
+
+        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+            $credentials['email'] = $login;
+        } else {
+            // Check if login is passed as phone/contact_number
+            $credentials['phone'] = $login;
+        }
+
+        if (! $token = Auth::guard('academy')->attempt($credentials)) {
+            return $this->sendError(__('message.credential_invalid'), 401);
+        }
+
+        $user = auth('academy')->user();
+
+        return $this->sendResponse([
+            'token' => $token,
+            'user' => $user,
+        ], __('message.login success'));
     }
 
     public function checkOtp(CheckOtp $request)
@@ -151,7 +182,7 @@ class AuthController extends BaseController
         }
     }
 
-    public function checkForgetOtp(CheckOtpForgetRequest $request)
+    public function checkOtpForget(CheckOtpForgetRequest $request)
     {
         $contactNumber = $request->contact_number;
         $key = $contactNumber.'_'.$request['otp'];
@@ -170,7 +201,7 @@ class AuthController extends BaseController
     public function resetPassword(ResetPasswordRequest $request)
     {
 
-        $academy = Academy::where('contact_number', $request->contact_number)->first();
+        $academy = Academy::where('phone', $request->contact_number)->first();
 
         if (! $academy) {
             return $this->sendError(__('message.user_not_found'), 404);
