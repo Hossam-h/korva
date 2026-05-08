@@ -201,6 +201,8 @@ class AuthController extends BaseController
     public function resetPassword(ResetPasswordRequest $request)
     {
 
+
+        dd(1);
         $academy = Academy::where('phone', $request->contact_number)->first();
 
         if (! $academy) {
