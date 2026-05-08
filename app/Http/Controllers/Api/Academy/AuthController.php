@@ -202,7 +202,6 @@ class AuthController extends BaseController
     {
 
 
-        dd(1);
         $academy = Academy::where('phone', $request->contact_number)->first();
 
         if (! $academy) {
