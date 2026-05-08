@@ -35,7 +35,7 @@ jobs:
           script: |
             cd /var/www/html/korva
             docker pull hossamdocker12/korva-app:latest
-            # docker-compose -f docker-compose.prod.yml down
+            docker-compose -f docker-compose.prod.yml down
             docker-compose -f docker-compose.prod.yml up -d --remove-orphans
             docker image prune -a -f
             docker system prune -f
