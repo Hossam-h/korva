@@ -40,5 +40,7 @@ jobs:
             docker-compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
             docker-compose -f docker-compose.prod.yml exec -T app php artisan config:cache
             docker-compose -f docker-compose.prod.yml exec -T app php artisan route:cache
+            docker-compose -f docker-compose.prod.yml exec -T app chmod -R 775 storage
+            docker-compose -f docker-compose.prod.yml exec -T -u root app chown -R www-data:www-data storage
 
 
