@@ -36,9 +36,6 @@ jobs:
             cd /var/www/html/korva
             docker pull hossamdocker12/korva-app:latest
             docker-compose -f docker-compose.prod.yml up -d --remove-orphans
-            docker-compose -f docker-compose.prod.yml exec -T app mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views bootstrap/cache
-            docker-compose -f docker-compose.prod.yml exec -T app chmod -R 775 storage bootstrap/cache
-            docker-compose -f docker-compose.prod.yml exec -T app chown -R www-data:www-data storage bootstrap/cache
             docker image prune -a -f
             docker system prune -f
             docker-compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
