@@ -23,6 +23,7 @@ class UpdateAcademyRequest extends FormRequest
             'country'              => 'sometimes|string|max:255',
             'city'                 => 'sometimes|string|max:255',
             'address'              => 'sometimes|string|max:255',
+            'owner_name'           => 'sometimes|string|max:255',
             'business_owner_email' => 'sometimes|email|max:255',
             'business_owner_phone' => 'sometimes|string|max:255',
             'is_active'            => 'sometimes|boolean',

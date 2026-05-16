@@ -26,6 +26,7 @@ Route::group([
 
     // Protected routes (requires academy JWT)
     Route::middleware('auth:academy')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
         Route::post('onboarding', [AuthController::class, 'onBoarding']);
 
         // Fields

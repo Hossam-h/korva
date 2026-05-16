@@ -134,13 +134,14 @@ class AuthController extends BaseController
         $academy = auth('academy')->user();
 
         $academy->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'age_group' => $request->age_group,
-            'country' => $request->country,
-            'city' => $request->city,
-            'address' => $request->address,
+            'name'                 => $request->name,
+            'email'                => $request->email,
+            'phone'                => $request->phone,
+            'age_group'            => $request->age_group,
+            'country'              => $request->country,
+            'city'                 => $request->city,
+            'address'              => $request->address,
+            'owner_name'           => $request->owner_name,
             'business_owner_email' => $request->business_owner_email,
             'business_owner_phone' => $request->business_owner_phone,
         ]);
@@ -200,8 +201,6 @@ class AuthController extends BaseController
 
     public function resetPassword(ResetPasswordRequest $request)
     {
-
-
         $academy = Academy::where('phone', $request->contact_number)->first();
 
         if (! $academy) {
@@ -213,5 +212,12 @@ class AuthController extends BaseController
         ]);
 
         return $this->sendResponse($academy, __('message.password_reset_success'));
+    }
+
+    public function logout()
+    {
+        JWTAuth::invalidate(JWTAuth::getToken());
+
+        return $this->sendResponse(null, 'Successfully logged out');
     }
 }

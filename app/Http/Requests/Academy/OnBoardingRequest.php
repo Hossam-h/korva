@@ -29,6 +29,7 @@ class OnBoardingRequest extends FormRequest
             'country'              => 'required',
             'city'                 => 'required',
             'address'              => 'required',
+            'owner_name'           => 'required',
             'business_owner_email' => 'required',
             'business_owner_phone' => 'required',
 

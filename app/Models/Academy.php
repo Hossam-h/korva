@@ -18,6 +18,7 @@ class Academy extends Authenticatable implements JWTSubject
         'country',
         'city',
         'address',
+        'owner_name',
         'business_owner_email',
         'business_owner_phone',
         'is_active',
