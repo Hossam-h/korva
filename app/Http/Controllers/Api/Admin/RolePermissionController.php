@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\AssignRoleRequest;
 use App\Http\Requests\Admin\CreatePermissionRequest;
 use App\Http\Requests\Admin\CreateRoleRequest;
 use App\Models\Admin;
+use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -51,22 +52,24 @@ class RolePermissionController extends BaseController
      * List all permissions for admin guard.
      * GET /admin/permissions
      */
-    public function allPermissions()
+    public function allPermissions(Request $request)
     {
-        $permissions = Permission::where('guard_name', 'admin')->get();
+        $permissions = Permission::where('guard_name', 'admin')
+            ->paginate($request->input('per_page', 15));
 
-        return $this->sendResponse($permissions, 'Permissions retrieved successfully');
+        return $this->sendPaginatedResponse($permissions, 'Permissions retrieved successfully');
     }
 
     /**
      * List all roles for admin guard.
      * GET /admin/roles
      */
-    public function allRoles()
+    public function allRoles(Request $request)
     {
-        $roles = Role::where('guard_name', 'admin')->get();
+        $roles = Role::where('guard_name', 'admin')
+            ->paginate($request->input('per_page', 15));
 
-        return $this->sendResponse($roles, 'Roles retrieved successfully');
+        return $this->sendPaginatedResponse($roles, 'Roles retrieved successfully');
     }
 
     /**

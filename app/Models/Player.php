@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasFileAttachment;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Player extends Authenticatable implements JWTSubject
 {
+    use HasFileAttachment;
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -17,6 +20,7 @@ class Player extends Authenticatable implements JWTSubject
         'address',
         'birth_date',
         'weight',
+        'image',
         'has_health_issues',
         'health_issues',
         'group_id',
@@ -79,5 +83,10 @@ class Player extends Authenticatable implements JWTSubject
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    protected function getFileFields(): array
+    {
+        return ['image'];
     }
 }

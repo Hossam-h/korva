@@ -6,17 +6,20 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\Academy\StoreCoachRequest;
 use App\Http\Requests\Academy\UpdateCoachRequest;
 use App\Models\Coach;
+use Illuminate\Http\Request;
 
 class CoachController extends BaseController
 {
     /**
      * List all coaches of the authenticated academy (auto-filtered by global scope).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $coaches = Coach::with(['groups', 'licenses', 'tournaments'])->latest()->get();
+        $coaches = Coach::with(['groups', 'licenses', 'tournaments'])
+            ->latest()
+            ->paginate($request->input('per_page', 15));
 
-        return $this->sendResponse($coaches, __('message.coaches_retrieved'));
+        return $this->sendPaginatedResponse($coaches, __('message.coaches_retrieved'));
     }
 
     /**

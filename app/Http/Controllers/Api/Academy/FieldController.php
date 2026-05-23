@@ -6,17 +6,18 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\Academy\StoreFieldRequest;
 use App\Http\Requests\Academy\UpdateFieldRequest;
 use App\Models\Field;
+use Illuminate\Http\Request;
 
 class FieldController extends BaseController
 {
     /**
      * List all fields of the authenticated academy (auto-filtered by global scope).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $fields = Field::latest()->get();
+        $fields = Field::latest()->paginate($request->input('per_page', 15));
 
-        return $this->sendResponse($fields, __('message.fields_retrieved'));
+        return $this->sendPaginatedResponse($fields, __('message.fields_retrieved'));
     }
 
     /**

@@ -6,17 +6,20 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\Academy\StoreGroupRequest;
 use App\Http\Requests\Academy\UpdateGroupRequest;
 use App\Models\Group;
+use Illuminate\Http\Request;
 
 class GroupController extends BaseController
 {
     /**
      * List all groups of the authenticated academy (auto-filtered by global scope).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $groups = Group::with('field')->latest()->get();
+        $groups = Group::with('field')
+            ->latest()
+            ->paginate($request->input('per_page', 15));
 
-        return $this->sendResponse($groups, __('message.groups_retrieved'));
+        return $this->sendPaginatedResponse($groups, __('message.groups_retrieved'));
     }
 
     /**

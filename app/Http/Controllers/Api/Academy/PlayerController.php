@@ -6,17 +6,20 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\Academy\StorePlayerRequest;
 use App\Http\Requests\Academy\UpdatePlayerRequest;
 use App\Models\Player;
+use Illuminate\Http\Request;
 
 class PlayerController extends BaseController
 {
     /**
      * List all players of the authenticated academy.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $players = Player::latest()->get();
+        $players = Player::withCount('bookings')
+            ->latest()
+            ->paginate($request->input('per_page', 15));
 
-        return $this->sendResponse($players, __('message.players_retrieved'));
+        return $this->sendPaginatedResponse($players, __('message.players_retrieved'));
     }
 
     /**
@@ -25,11 +28,19 @@ class PlayerController extends BaseController
     public function store(StorePlayerRequest $request)
     {
         $data = $request->validated();
+
+        $image = $request->file('image');
+        unset($data['image']);
+
         $data['password'] = bcrypt($data['password']);
 
         $player = Player::create($data);
 
-        return $this->sendResponse($player, __('message.player_created'), 201);
+        if ($image) {
+            $player->uploadFile($image, 'image');
+        }
+
+        return $this->sendResponse($player->fresh(), __('message.player_created'), 201);
     }
 
     /**
@@ -59,11 +70,18 @@ class PlayerController extends BaseController
 
         $data = $request->validated();
 
+        $image = $request->file('image');
+        unset($data['image']);
+
         if (isset($data['password'])) {
             $data['password'] = bcrypt($data['password']);
         }
 
         $player->update($data);
+
+        if ($image) {
+            $player->uploadFile($image, 'image');
+        }
 
         return $this->sendResponse($player->fresh(), __('message.player_updated'));
     }

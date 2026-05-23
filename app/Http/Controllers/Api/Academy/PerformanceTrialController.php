@@ -6,17 +6,18 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\Academy\StorePerformanceTrialRequest;
 use App\Http\Requests\Academy\UpdatePerformanceTrialRequest;
 use App\Models\PerformanceTrial;
+use Illuminate\Http\Request;
 
 class PerformanceTrialController extends BaseController
 {
     /**
      * List all performance trials of the authenticated academy (auto-filtered by global scope).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $trials = PerformanceTrial::latest()->get();
+        $trials = PerformanceTrial::latest()->paginate($request->input('per_page', 15));
 
-        return $this->sendResponse($trials, __('message.performance_trials_retrieved'));
+        return $this->sendPaginatedResponse($trials, __('message.performance_trials_retrieved'));
     }
 
     /**

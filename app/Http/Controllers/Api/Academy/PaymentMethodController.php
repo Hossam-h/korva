@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\Academy\StorePaymentMethodRequest;
 use App\Http\Requests\Academy\UpdatePaymentMethodRequest;
 use App\Models\PaymentMethod;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PaymentMethodController extends BaseController
@@ -13,14 +14,14 @@ class PaymentMethodController extends BaseController
     /**
      * List all payment methods for the authenticated academy.
      */
-    public function index()
+    public function index(Request $request)
     {
         $methods = PaymentMethod::with('provider')
             ->where('academy_id', Auth::guard('academy')->id())
             ->latest()
-            ->get();
+            ->paginate($request->input('per_page', 15));
 
-        return $this->sendResponse($methods, __('message.payment_methods_retrieved'));
+        return $this->sendPaginatedResponse($methods, __('message.payment_methods_retrieved'));
     }
 
     /**

@@ -23,6 +23,7 @@ class StorePlayerRequest extends FormRequest
             'address'          => 'sometimes|string|max:500',
             'birth_date'       => 'required|date',
             'weight'           => 'sometimes|numeric|min:0',
+            'image'            => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'has_health_issues'=> 'sometimes|boolean',
             'health_issues'    => 'sometimes|nullable|string|max:1000',
             'group_id'         => 'required|exists:groups,id',
