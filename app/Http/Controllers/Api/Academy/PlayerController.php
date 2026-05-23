@@ -16,6 +16,7 @@ class PlayerController extends BaseController
     public function index(Request $request)
     {
         $players = Player::withCount('bookings')
+            ->filter()
             ->latest()
             ->paginate($request->input('per_page', 15));
 

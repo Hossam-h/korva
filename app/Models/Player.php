@@ -89,4 +89,39 @@ class Player extends Authenticatable implements JWTSubject
     {
         return ['image'];
     }
+
+    public function scopeFilter($query)
+    {
+        return $query->when(request('group_id'), function ($q, $groupId) {
+            $q->where('group_id', $groupId);
+        })->when(request('subscription'), function ($q, $subscription) {
+            $q->whereHas('bookings', function ($b) use ($subscription) {
+                $b->where('booking_type', $subscription);
+            });
+        })->when(request('payment_status'), function ($q, $status) {
+            $q->whereHas('bookings', function ($b) use ($status) {
+                $b->where('payment_status', $status);
+            });
+        })->when(request('attendance'), function ($q, $attendance) {
+            $q->whereHas('bookings', function ($b) use ($attendance) {
+                if ($attendance === 'attended') {
+                    $b->where('status', 'completed');
+                } elseif ($attendance === 'absent') {
+                    $b->where('status', 'cancelled');
+                } elseif ($attendance === 'upcoming') {
+                    $b->whereIn('status', ['pending', 'confirmed']);
+                }
+            });
+        })->when(request('age'), function ($q, $age) {
+            $q->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) = ?', [(int) $age]);
+        })->when(request('min_age'), function ($q, $minAge) {
+            $q->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) >= ?', [(int) $minAge]);
+        })->when(request('max_age'), function ($q, $maxAge) {
+            $q->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) <= ?', [(int) $maxAge]);
+        })->when(request('joined_from'), function ($q, $from) {
+            $q->whereDate('created_at', '>=', $from);
+        })->when(request('joined_to'), function ($q, $to) {
+            $q->whereDate('created_at', '<=', $to);
+        });
+    }
 }
