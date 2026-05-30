@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Academy\AcademyGeneralSettingController;
 use App\Http\Controllers\Api\Academy\AuthController;
 use App\Http\Controllers\Api\Academy\CoachController;
 use App\Http\Controllers\Api\Academy\FieldController;
+use App\Http\Controllers\Api\Academy\GroupController;
 use App\Http\Controllers\Api\Academy\PaymentMethodController;
 use App\Http\Controllers\Api\Academy\PaymentProviderController;
 use App\Http\Controllers\Api\Academy\PerformanceTrialController;
