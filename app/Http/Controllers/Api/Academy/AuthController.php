@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Academy;
 
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\Academy\AcademyRegister;
+use App\Http\Requests\Academy\AcademyRegisterEmail;
 use App\Http\Requests\Academy\CheckOtp;
+use App\Http\Requests\Academy\CheckOtpEmail;
 use App\Http\Requests\Academy\OnBoardingRequest;
 use App\Models\Academy;
 use App\Models\AcademyAttach;
@@ -30,6 +32,19 @@ class AuthController extends BaseController
         } else {
             $this->sendError(__('message.otp_send_failed_check_your_number_and_country_code'), 422);
         }
+    }
+
+    public function registerEmail(AcademyRegisterEmail $request)
+    {
+        $email = $request->email;
+
+        $send = sendEmail($email);
+
+        if ($send) {
+            return $this->sendResponse([], __('message.otp_send_success'));
+        }
+
+        return $this->sendError(__('message.otp_send_failed'), 422);
     }
 
     public function login(AcademyLoginRequest $request)
@@ -87,6 +102,49 @@ class AuthController extends BaseController
                 $message = __('message.login success');
 
                 $token = $this->getToken($request);
+            } else {
+                return $this->sendError(__('message.otp_invalid'), 401);
+            }
+
+            DB::commit();
+        } else {
+            return $this->sendError(__('message.otp_invalid'), 401);
+        }
+
+        $user = auth('academy')->user();
+
+        if (! $user) {
+            return $this->sendError(__('message.credential_invalid'), 401);
+        }
+
+        return $this->sendResponse([
+            'token' => $token ?? null,
+        ], __('message.login success'));
+    }
+
+    public function checkOtpEmail(CheckOtpEmail $request)
+    {
+        $email = $request->email;
+        $key = $email.'_'.$request['otp'];
+        $data = Cache::get($key);
+
+        if (in_array($request['otp'], Cache::get('otps', [])) || $data) {
+            DB::beginTransaction();
+
+            if ($data) {
+                $checkUserExists = Academy::withTrashed()
+                    ->where('email', $email)
+                    ->first();
+
+                if (! $checkUserExists) {
+                    $academy = Academy::create([
+                        'email' => $email,
+                    ]);
+                }
+
+                Cache::forget($key);
+
+                $token = $this->getToken(['email' => $email], 'email');
             } else {
                 return $this->sendError(__('message.otp_invalid'), 401);
             }

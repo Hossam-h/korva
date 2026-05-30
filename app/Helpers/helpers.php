@@ -1,7 +1,34 @@
 <?php
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
+if (! function_exists('sendEmail')) {
+    /**
+     * Send OTP via email.
+     *
+     * @param  string  $email
+     * @return bool
+     */
+    function sendEmail($email)
+    {
+        $otp = '1234'; // remove after testing
+        generateOtp($email, $otp);
+
+        try {
+            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email) {
+                $message->to($email)->subject('Your Korva Verification Code');
+            });
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Email OTP failed for '.$email.': '.$e->getMessage());
+
+            return false;
+        }
+    }
+}
 
 if (! function_exists('send')) {
     /**

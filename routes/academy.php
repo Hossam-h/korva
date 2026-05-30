@@ -18,8 +18,10 @@ Route::group([
 ], function () {
     // Public routes (no auth)
     Route::post('register', [AuthController::class, 'register']);
+    Route::post('register-email', [AuthController::class, 'registerEmail']);
     Route::post('login', [AuthController::class, 'login']);
     Route::post('check-otp', [AuthController::class, 'checkOtp']);
+    Route::post('check-otp-email', [AuthController::class, 'checkOtpEmail']);
 
     Route::post('forget-password', [AuthController::class, 'forgetPassword']);
     Route::post('check-otp-forget', [AuthController::class, 'checkOtpForget']);
