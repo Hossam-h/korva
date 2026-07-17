@@ -5,7 +5,7 @@ namespace App\Http\Requests\Player;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class PlayerSetPasswordRequest extends FormRequest
+class PlayerResetPasswordRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,6 +15,7 @@ class PlayerSetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'reset_token'           => 'required|string',
             'password'              => ['required', 'string', 'confirmed', Password::defaults()],
             'password_confirmation' => 'required|string',
         ];

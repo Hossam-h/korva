@@ -11,9 +11,18 @@ Route::group([
     'prefix' => 'player',
 ], function () {
     // Public routes (no auth)
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('check-otp', [AuthController::class, 'checkOtp']);
+    Route::post('register', [AuthController::class, 'register'])->middleware('throttle:6,1');
+    Route::post('resend-otp', [AuthController::class, 'resendOtp'])->middleware('throttle:6,1');
+    Route::post('check-otp', [AuthController::class, 'checkOtp'])->middleware('throttle:6,1');
     Route::post('login', [AuthController::class, 'login']);
+
+    // Password recovery
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->middleware('throttle:6,1');
+    Route::post('forgot-password/verify-otp', [AuthController::class, 'verifyResetOtp']);
+    Route::post('reset-password', [AuthController::class, 'resetPassword']);
+
+    // Social login (Google / Apple)
+    Route::post('social-login', [AuthController::class, 'socialLogin']);
 
     // Protected routes (requires player JWT)
     Route::middleware('auth:player')->group(function () {

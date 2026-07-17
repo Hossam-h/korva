@@ -4,7 +4,7 @@ namespace App\Http\Requests\Player;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PlayerCheckOtpRequest extends FormRequest
+class PlayerVerifyResetOtpRequest extends FormRequest
 {
     public function authorize(): bool
     {

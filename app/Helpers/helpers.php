@@ -13,7 +13,7 @@ if (! function_exists('sendEmail')) {
      */
     function sendEmail($email)
     {
-        $otp = '1234'; // remove after testing
+        $otp = '123456'; // remove after testing
         generateOtp($email, $otp);
 
         try {
@@ -66,7 +66,7 @@ if (! function_exists('sendOtpViaChannel')) {
     {
 
 
-        $otp = '1234'; // remove after testing
+        $otp = '123456'; // remove after testing
         generateOtp($contactNumber, $otp);
 
         return true;
@@ -77,7 +77,7 @@ if (! function_exists('sendOtpViaChannel')) {
         //         'phoneNumber' => $contactNumber,
         //         'name' => env('APP_NAME', 'Eyvar'),
         //         'type' => $channel, // 'whatsapp' or 'sms'
-        //         'otp_length' => 4,
+        //         'otp_length' => 6,
         //         'lang' => 'en',
         //         'reference' => rand(100, 999),
         //     ]);

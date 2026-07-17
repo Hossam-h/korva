@@ -18,11 +18,17 @@ class Player extends Authenticatable implements JWTSubject
         'gender',
         'type',
         'address',
+        'latitude',
+        'longitude',
         'birth_date',
         'weight',
         'image',
         'has_health_issues',
         'health_issues',
+        'other_health_issue',
+        'parent_contact',
+        'provider',
+        'provider_id',
         'group_id',
         'period',
         'password',
@@ -36,6 +42,13 @@ class Player extends Authenticatable implements JWTSubject
     protected $casts = [
         'birth_date' => 'date',
         'password' => 'hashed',
+        'latitude' => 'float',
+        'longitude' => 'float',
+        'has_health_issues' => 'boolean',
+    ];
+
+    protected $appends = [
+        'image_url',
     ];
 
     /**
@@ -83,6 +96,12 @@ class Player extends Authenticatable implements JWTSubject
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    /** Public URL for the player's profile image (null when none set). */
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->getFileUrl('image');
     }
 
     protected function getFileFields(): array

@@ -11,6 +11,13 @@ return [
     'forget_password_success' => 'Forget password link sent successfully.',
     'otp_valid' => 'OTP is valid.',
     'password_reset_success' => 'Password reset successfully.',
+    'otp_send_failed' => 'Failed to send OTP. Please try again.',
+    'otp_resend_cooldown' => 'Please wait :seconds seconds before requesting another OTP.',
+    'otp_too_many_attempts' => 'Too many invalid attempts. Please request a new OTP.',
+    'reset_token_invalid' => 'Invalid or expired password reset token.',
+    'password_set_success' => 'Password set successfully.',
+    'profile_updated_success' => 'Profile updated successfully.',
+    'social_login_failed' => 'Could not verify the social login. Please try again.',
 
     // Fields
     'fields_retrieved' => 'Fields retrieved successfully.',

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Player;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PlayerCheckOtpRequest extends FormRequest
+class PlayerResendOtpRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,7 +15,6 @@ class PlayerCheckOtpRequest extends FormRequest
     {
         return [
             'contact' => 'required|string',
-            'otp'     => 'required|digits:6',
         ];
     }
 
@@ -23,7 +22,6 @@ class PlayerCheckOtpRequest extends FormRequest
     {
         return [
             'contact.required' => __('validation.required', ['attribute' => 'email or phone']),
-            'otp.required'     => __('validation.required', ['attribute' => 'otp']),
         ];
     }
 }

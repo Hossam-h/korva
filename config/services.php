@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    // Social login (mobile). The app does native OAuth and sends the token to
+    // the API, which verifies it via App\Services\SocialLoginService.
+    // Requires: composer require laravel/socialite
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
+    'apple' => [
+        'client_id' => env('APPLE_CLIENT_ID'),
+    ],
+
 ];
