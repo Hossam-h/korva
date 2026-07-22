@@ -392,7 +392,7 @@ class AuthController extends BaseController
     private function sendOtpTo(string $contact): bool
     {
         if (filter_var($contact, FILTER_VALIDATE_EMAIL)) {
-            $otp = (string) rand(100000, 999999);
+            $otp = '123456'; // static OTP for testing — remove after testing
             generateOtp($contact, $otp);
 
             try {
