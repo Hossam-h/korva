@@ -49,6 +49,7 @@ class Player extends Authenticatable implements JWTSubject
 
     protected $appends = [
         'image_url',
+        'is_profile_completed',
     ];
 
     /**
@@ -102,6 +103,20 @@ class Player extends Authenticatable implements JWTSubject
     public function getImageUrlAttribute(): ?string
     {
         return $this->getFileUrl('image');
+    }
+
+    /**
+     * Tells the app whether to route the user into the profile-completion /
+     * account-type screens or straight into the app. `type` is left null by
+     * OTP/social registration until complete-profile sets it; first/last name
+     * are blank on OTP signup and on Apple (which never sends a name) until
+     * complete-profile sets those too.
+     */
+    public function getIsProfileCompletedAttribute(): bool
+    {
+        return ! is_null($this->type)
+            && filled($this->first_name)
+            && filled($this->last_name);
     }
 
     protected function getFileFields(): array
