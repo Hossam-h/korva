@@ -24,13 +24,18 @@ Route::group([
     // Social login (Google / Apple)
     Route::post('social-login', [AuthController::class, 'socialLogin']);
 
+    // Refresh must NOT sit behind auth:player — that middleware rejects an
+    // expired access token before the request ever reaches the controller,
+    // which defeats the one case refresh exists for. JWTAuth::refresh() does
+    // its own validation (signature, blacklist, refresh_ttl window).
+    Route::post('refresh', [AuthController::class, 'refresh'])->middleware('throttle:20,1');
+
     // Protected routes (requires player JWT)
     Route::middleware('auth:player')->group(function () {
         Route::post('set-password', [AuthController::class, 'setPassword']);
         Route::post('complete-profile', [AuthController::class, 'completeProfile']);
         Route::post('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('refresh', [AuthController::class, 'refresh']);
 
         // Home
         Route::get('home', [HomeController::class, 'index']);

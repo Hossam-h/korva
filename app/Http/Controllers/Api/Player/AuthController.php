@@ -298,7 +298,9 @@ class AuthController extends BaseController
                 'email'       => $identity['email'] ?? null,
                 'first_name'  => $first,
                 'last_name'   => $last,
-                'type'        => 'player',
+                // Google/Apple never tell us parent vs. player — leave it
+                // unset (null) rather than guessing. The app must call
+                // complete-profile to set the real type, same as OTP signup.
                 'provider'    => $request->provider,
                 'provider_id' => $identity['provider_id'],
             ]);

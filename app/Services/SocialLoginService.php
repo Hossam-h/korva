@@ -2,7 +2,12 @@
 
 namespace App\Services;
 
+use Firebase\JWT\JWK;
+use Firebase\JWT\JWT;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use RuntimeException;
+use UnexpectedValueException;
 
 /**
  * Verifies mobile social-login tokens and returns a normalised identity.
@@ -53,15 +58,39 @@ class SocialLoginService
     }
 
     /**
-     * Verify an Apple identity token.
-     *
-     * TODO: validate the JWT signature against Apple's public keys
-     * (https://appleid.apple.com/auth/keys) and the `aud`/`iss`/`exp` claims.
-     * Requires APPLE_CLIENT_ID in config/services.php. Left as an explicit
-     * failure until credentials + key verification are wired.
+     * Verify an Apple identity token — the signed JWT the app gets from
+     * ASAuthorizationAppleIDCredential.identityToken (iOS) or the Android/JS
+     * equivalent. This is the token the mobile app must send, NOT Apple's
+     * accessToken: the access token is an opaque string with no identity
+     * claims (only usable against Apple's own token-revoke/refresh endpoint),
+     * whereas the identity token is a self-contained JWT we can verify
+     * locally against Apple's public keys — no callback to Apple needed
+     * beyond fetching those keys, mirroring how verifyGoogle() works above.
      */
     protected function verifyApple(string $token): array
     {
-        throw new RuntimeException('Apple social login is not configured yet. Provide APPLE_CLIENT_ID and implement identity-token verification.');
+        $keySet = Cache::remember('apple_jwks', now()->addHours(6), function () {
+            return Http::timeout(5)->get('https://appleid.apple.com/auth/keys')->throw()->json();
+        });
+
+        $payload = JWT::decode($token, JWK::parseKeySet($keySet, 'RS256'));
+
+        if ($payload->iss !== 'https://appleid.apple.com') {
+            throw new UnexpectedValueException('Unexpected Apple identity token issuer: '.$payload->iss);
+        }
+
+        $allowedAudiences = array_filter(array_map('trim', explode(',', (string) config('services.apple.client_id'))));
+
+        if ($allowedAudiences && ! in_array($payload->aud, $allowedAudiences, true)) {
+            throw new UnexpectedValueException('Unexpected Apple identity token audience: '.$payload->aud);
+        }
+
+        return [
+            'provider_id' => (string) $payload->sub,
+            // Only present on the FIRST authorization; null on every login after.
+            'email'       => $payload->email ?? null,
+            // Apple never includes the name in the token at all (unlike Google).
+            'name'        => null,
+        ];
     }
 }
