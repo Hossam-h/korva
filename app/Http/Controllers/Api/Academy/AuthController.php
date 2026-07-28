@@ -202,7 +202,13 @@ class AuthController extends BaseController
             'owner_name'           => $request->owner_name,
             'business_owner_email' => $request->business_owner_email,
             'business_owner_phone' => $request->business_owner_phone,
+            'latitude'             => $request->latitude,
+            'longitude'            => $request->longitude,
         ]);
+
+        if ($request->hasFile('image')) {
+            $academy->uploadFile($request->file('image'), 'image', 'academies');
+        }
 
         // Handle attachments
         if ($request->has('attachments')) {

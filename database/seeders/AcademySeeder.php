@@ -23,6 +23,8 @@ class AcademySeeder extends Seeder
                 'country' => 'السعودية',
                 'city' => 'الرياض',
                 'address' => 'الرياض، حي العليا، شارع الملك فهد',
+                'latitude' => 24.7136,
+                'longitude' => 46.6753,
                 'password' => Hash::make('password'),
             ],
             [
@@ -33,6 +35,8 @@ class AcademySeeder extends Seeder
                 'country' => 'السعودية',
                 'city' => 'جدة',
                 'address' => 'جدة، حي الزهراء، شارع التحلية',
+                'latitude' => 21.5433,
+                'longitude' => 39.1728,
                 'password' => Hash::make('password'),
             ],
             [
@@ -43,6 +47,8 @@ class AcademySeeder extends Seeder
                 'country' => 'السعودية',
                 'city' => 'الدمام',
                 'address' => 'الدمام، حي الفيصلية، شارع الأمير سلطان',
+                'latitude' => 26.4207,
+                'longitude' => 50.0888,
                 'password' => Hash::make('password'),
             ],
         ];

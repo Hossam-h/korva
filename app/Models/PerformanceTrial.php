@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToAcademy;
 use App\Traits\HasFileAttachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PerformanceTrial extends Model
 {
-    use HasFileAttachment;
+    use HasFileAttachment, BelongsToAcademy;
 
     protected $fillable = [
         'academy_id',

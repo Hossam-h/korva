@@ -44,6 +44,8 @@ Route::group([
         Route::get('academies/search', [AcademyController::class, 'search']);
         Route::get('academies/{academy}', [AcademyController::class, 'show']);
         Route::post('academies/{academy}/review', [AcademyController::class, 'addReview']);
+        Route::post('academies/{academy}/favorite', [AcademyController::class, 'favorite']);
+        Route::delete('academies/{academy}/favorite', [AcademyController::class, 'unfavorite']);
 
         // Bookings
         Route::post('bookings', [BookingController::class, 'store']);

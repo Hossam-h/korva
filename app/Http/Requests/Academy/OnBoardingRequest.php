@@ -32,6 +32,9 @@ class OnBoardingRequest extends FormRequest
             'owner_name'           => 'required',
             'business_owner_email' => 'required',
             'business_owner_phone' => 'required',
+            'latitude'             => 'sometimes|nullable|numeric|between:-90,90',
+            'longitude'            => 'sometimes|nullable|numeric|between:-180,180',
+            'image'                => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
 
             // Attachments (optional array)
             'attachments'                 => 'sometimes|array',

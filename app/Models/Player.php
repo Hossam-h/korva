@@ -94,6 +94,13 @@ class Player extends Authenticatable implements JWTSubject
         return $this->hasMany(BookingPlayer::class);
     }
 
+    /** Academies this player has favorited. */
+    public function favoriteAcademies()
+    {
+        return $this->belongsToMany(Academy::class, 'academy_favorites')
+            ->withTimestamps();
+    }
+
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
