@@ -26,8 +26,10 @@ class AcademyResource extends JsonResource
             'image_url' => $this->image_url,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
-            'travel_time' => $this->travel_time,
+            'travel_time' => $this->travel_time !== null ? $this->travel_time.' minutes' : null,
             'price' => $this->price,
+            'currency' => $this->currency ?? 'SAR',
+            'price_period' => 'month',
             'is_favorite' => (bool) $this->is_favorite,
             'is_active' => (bool) $this->is_active,
             'status' => $this->status,
@@ -35,8 +37,7 @@ class AcademyResource extends JsonResource
             'reviews_avg_rating' => $this->reviews_avg_rating !== null
                 ? round((float) $this->reviews_avg_rating, 2)
                 : 0,
-            'groups' => $this->whenLoaded('groups'),
-            'coaches' => $this->whenLoaded('coaches'),
+            'reviews_count' => (int) ($this->reviews_count ?? 0),
         ];
     }
 }

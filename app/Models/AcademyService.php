@@ -2,33 +2,28 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToAcademy;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
-class AcademyReview extends Model
+class AcademyService extends Model
 {
+    use BelongsToAcademy;
+
     protected $fillable = [
         'academy_id',
-        'player_id',
-        'rating',
-        'comment',
+        'title',
+        'description',
+        'full_description',
+        'icon',
         'images',
+        'is_active',
     ];
 
     protected $casts = [
         'images' => 'array',
+        'is_active' => 'boolean',
     ];
-
-    public function academy(): BelongsTo
-    {
-        return $this->belongsTo(Academy::class);
-    }
-
-    public function player(): BelongsTo
-    {
-        return $this->belongsTo(Player::class);
-    }
 
     public function getImageUrlsAttribute(): array
     {

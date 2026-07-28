@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Api\Academy;
 
 use App\Http\Controllers\Api\BaseController;
+use App\Http\Requests\Academy\AcademyLoginRequest;
 use App\Http\Requests\Academy\AcademyRegister;
 use App\Http\Requests\Academy\AcademyRegisterEmail;
 use App\Http\Requests\Academy\CheckOtp;
 use App\Http\Requests\Academy\CheckOtpEmail;
+use App\Http\Requests\Academy\CheckOtpForgetRequest;
+use App\Http\Requests\Academy\ForgetPasswordRequest;
 use App\Http\Requests\Academy\OnBoardingRequest;
+use App\Http\Requests\Academy\ResetPasswordRequest;
 use App\Models\Academy;
 use App\Models\AcademyAttach;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +19,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Http\Requests\Academy\ForgetPasswordRequest;
-use App\Http\Requests\Academy\CheckOtpForgetRequest;
-use App\Http\Requests\Academy\ResetPasswordRequest;
-use App\Http\Requests\Academy\AcademyLoginRequest;
+
 class AuthController extends BaseController
 {
     public function register(AcademyRegister $request)
@@ -80,7 +81,6 @@ class AuthController extends BaseController
         $contactNumber = $request->contact_number;
         $key = $contactNumber.'_'.$request['otp'];
         $data = Cache::get($key);
-
 
         // Check if OTP exists in global array or in cache with key
         if (in_array($request['otp'], Cache::get('otps', [])) || $data) {
@@ -192,22 +192,32 @@ class AuthController extends BaseController
         $academy = auth('academy')->user();
 
         $academy->update([
-            'name'                 => $request->name,
-            'email'                => $request->email,
-            'phone'                => $request->phone,
-            'age_group'            => $request->age_group,
-            'country'              => $request->country,
-            'city'                 => $request->city,
-            'address'              => $request->address,
-            'owner_name'           => $request->owner_name,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'age_group' => $request->age_group,
+            'min_age' => $request->min_age,
+            'max_age' => $request->max_age,
+            'accepted_genders' => $request->accepted_genders,
+            'country' => $request->country,
+            'city' => $request->city,
+            'address' => $request->address,
+            'description' => $request->description,
+            'owner_name' => $request->owner_name,
             'business_owner_email' => $request->business_owner_email,
             'business_owner_phone' => $request->business_owner_phone,
-            'latitude'             => $request->latitude,
-            'longitude'            => $request->longitude,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'currency' => strtoupper($request->input('currency', 'SAR')),
         ]);
 
         if ($request->hasFile('image')) {
             $academy->uploadFile($request->file('image'), 'image', 'academies');
+        }
+
+        if ($request->has('operating_hours')) {
+            $academy->operatingHours()->delete();
+            $academy->operatingHours()->createMany($request->input('operating_hours', []));
         }
 
         // Handle attachments
@@ -224,7 +234,7 @@ class AuthController extends BaseController
         }
 
         return $this->sendResponse(
-            $academy->fresh()->load('attaches'),
+            $academy->fresh()->load(['attaches', 'operatingHours']),
             __('message.onboarding_success')
         );
     }

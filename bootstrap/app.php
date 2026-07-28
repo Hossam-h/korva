@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
@@ -23,12 +25,32 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/player.php'));
+
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/parent.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // This is an API-first application. Never try to redirect an
+        // unauthenticated API request to a web route named "login".
+        $middleware->redirectGuestsTo(
+            fn (Request $request) => $request->is('api/*') ? null : '/'
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized.',
+                'error_code' => 'unauthenticated',
+            ], 401);
+        });
+
         // JWT failures otherwise bubble up as raw 500s with a stack trace.
         // Map them to a clean 401 + machine-readable error_code so API clients
         // (mobile app) can tell "access token expired, try refresh" apart from

@@ -42,8 +42,14 @@ Route::group([
 
         // Academies
         Route::get('academies/search', [AcademyController::class, 'search']);
+        Route::get('academies/favorites', [AcademyController::class, 'favorites']);
+        Route::get('academies/{academy}/coaches', [AcademyController::class, 'coaches']);
+        Route::get('academies/{academy}/services', [AcademyController::class, 'services']);
+        Route::get('academies/{academy}/reviews', [AcademyController::class, 'reviews']);
+        Route::get('academies/{academy}/groups', [AcademyController::class, 'groups']);
         Route::get('academies/{academy}', [AcademyController::class, 'show']);
         Route::post('academies/{academy}/review', [AcademyController::class, 'addReview']);
+        Route::post('coaches/{coach}/review', [AcademyController::class, 'reviewCoach']);
         Route::post('academies/{academy}/favorite', [AcademyController::class, 'favorite']);
         Route::delete('academies/{academy}/favorite', [AcademyController::class, 'unfavorite']);
 

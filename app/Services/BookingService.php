@@ -17,9 +17,8 @@ class BookingService
     /**
      * Create a new booking for a player / parent.
      *
-     * @param  array   $data    Validated booking data (from StoreBookingRequest)
+     * @param  array  $data  Validated booking data (from StoreBookingRequest)
      * @param  Player  $player  The authenticated player (account holder / payer)
-     * @return Booking
      *
      * @throws \Exception
      */
@@ -30,14 +29,11 @@ class BookingService
         // ── Capacity check ───────────────────────────────────────────────────
         if ($group->capacity !== null) {
             $participantCount = count($data['player_ids']);
-            $occupied = BookingPlayer::whereHas('booking', function ($q) use ($group) {
-                $q->where('group_id', $group->id)
-                  ->whereIn('status', ['pending', 'confirmed']);
-            })->count();
+            $occupied = $this->occupiedSeats($group->id);
 
             if (($occupied + $participantCount) > $group->capacity) {
                 throw new \Exception(
-                    "Group is at capacity. Only " . max(0, $group->capacity - $occupied) . " spot(s) remaining."
+                    'Group is at capacity. Only '.max(0, $group->capacity - $occupied).' spot(s) remaining.'
                 );
             }
         }
@@ -47,17 +43,17 @@ class BookingService
 
         if ($data['booking_type'] === 'single') {
             $unitPrice = (float) ($group->session_price ?? 0);
-            $subtotal  = $unitPrice * $participantCount;
+            $subtotal = $unitPrice * $participantCount;
         } else {
             // monthly: price × months × participants
             $unitPrice = (float) ($group->monthly_price ?? 0);
-            $months    = (int) ($data['duration_months'] ?? 1);
-            $subtotal  = $unitPrice * $months * $participantCount;
+            $months = (int) ($data['duration_months'] ?? 1);
+            $subtotal = $unitPrice * $months * $participantCount;
         }
 
         // ── Coupon / Discount ────────────────────────────────────────────────
         $discountAmount = 0;
-        $coupon         = null;
+        $coupon = null;
 
         if (! empty($data['coupon_code'])) {
             [$coupon, $discountAmount] = $this->applyCoupon($data['coupon_code'], $subtotal);
@@ -68,30 +64,30 @@ class BookingService
         // ── Persist ──────────────────────────────────────────────────────────
         return DB::transaction(function () use ($data, $player, $group, $subtotal, $discountAmount, $totalAmount, $coupon) {
             $booking = Booking::create([
-                'academy_id'          => $data['academy_id'],
-                'group_id'            => $group->id,
-                'player_id'           => $player->id,
-                'booking_type'        => $data['booking_type'],
-                'session_date'        => $data['session_date'] ?? null,
-                'session_start_time'  => $data['session_start_time'] ?? null,
-                'session_end_time'    => $data['session_end_time'] ?? null,
-                'duration_months'     => $data['duration_months'] ?? null,
-                'status'              => 'pending',
-                'subtotal'            => $subtotal,
-                'discount_amount'     => $discountAmount,
-                'total_amount'        => $totalAmount,
-                'coupon_id'           => $coupon?->id,
-                'coupon_code'         => $coupon?->code,
+                'academy_id' => $data['academy_id'],
+                'group_id' => $group->id,
+                'player_id' => $player->id,
+                'booking_type' => $data['booking_type'],
+                'session_date' => $data['session_date'] ?? null,
+                'session_start_time' => $data['session_start_time'] ?? null,
+                'session_end_time' => $data['session_end_time'] ?? null,
+                'duration_months' => $data['duration_months'] ?? null,
+                'status' => 'pending',
+                'subtotal' => $subtotal,
+                'discount_amount' => $discountAmount,
+                'total_amount' => $totalAmount,
+                'coupon_id' => $coupon?->id,
+                'coupon_code' => $coupon?->code,
                 'payment_method_type' => $data['payment_method_type'] ?? null,
-                'payment_status'      => 'unpaid',
-                'notes'               => $data['notes'] ?? null,
+                'payment_status' => 'unpaid',
+                'notes' => $data['notes'] ?? null,
             ]);
 
             // Insert participants
             foreach ($data['player_ids'] as $participantId) {
                 BookingPlayer::create([
                     'booking_id' => $booking->id,
-                    'player_id'  => $participantId,
+                    'player_id' => $participantId,
                 ]);
             }
 
@@ -99,10 +95,25 @@ class BookingService
         });
     }
 
+    public function occupiedSeats(int $groupId): int
+    {
+        return BookingPlayer::whereHas('booking', function ($query) use ($groupId) {
+            $query->where('group_id', $groupId)
+                ->whereIn('status', ['pending', 'confirmed']);
+        })->count();
+    }
+
+    public function availableSeats(Group $group): ?int
+    {
+        return $group->capacity === null
+            ? null
+            : max(0, $group->capacity - $this->occupiedSeats($group->id));
+    }
+
     /**
      * Validate a coupon code and compute the discount amount.
      *
-     * @return array{Coupon, float}  [coupon, discountAmount]
+     * @return array{Coupon, float} [coupon, discountAmount]
      *
      * @throws \Exception
      */
@@ -158,9 +169,9 @@ class BookingService
     public function confirm(Booking $booking, ?string $paymentReference = null): Booking
     {
         $booking->update([
-            'status'             => 'confirmed',
-            'payment_status'     => 'paid',
-            'payment_reference'  => $paymentReference,
+            'status' => 'confirmed',
+            'payment_status' => 'paid',
+            'payment_reference' => $paymentReference,
         ]);
 
         $this->incrementCouponUsage($booking);
@@ -217,8 +228,8 @@ class BookingService
             6 => 'saturday',
         ];
 
-        $dayOfWeek  = $carbon->dayOfWeek;
-        $arabicDay  = $dayMap[$dayOfWeek];
+        $dayOfWeek = $carbon->dayOfWeek;
+        $arabicDay = $dayMap[$dayOfWeek];
         $englishDay = $dayMapEn[$dayOfWeek];
 
         $groupDays = array_map('mb_strtolower', (array) $group->days);
@@ -234,7 +245,7 @@ class BookingService
         return [
             [
                 'start_time' => $group->start_time,
-                'end_time'   => $group->end_time,
+                'end_time' => $group->end_time,
             ],
         ];
     }

@@ -50,4 +50,9 @@ class Group extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function players()
+    {
+        return $this->hasMany(Player::class);
+    }
 }

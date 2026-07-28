@@ -28,22 +28,28 @@ class CoachController extends BaseController
     public function store(StoreCoachRequest $request)
     {
         $validated = $request->validated();
+        $image = $request->file('image');
+        unset($validated['image'], $validated['group_ids'], $validated['licenses'], $validated['tournaments']);
 
         $coach = Coach::create($validated);
 
+        if ($image) {
+            $coach->uploadFile($image, 'image', 'coaches');
+        }
+
         // Sync many-to-many groups
-        if (isset($validated['group_ids'])) {
-            $coach->groups()->syncWithoutDetaching($validated['group_ids']);
+        if ($request->filled('group_ids')) {
+            $coach->groups()->syncWithoutDetaching($request->input('group_ids'));
         }
 
         // Create licenses
-        if (! empty($validated['licenses'])) {
-            $coach->licenses()->createMany($validated['licenses']);
+        if ($request->filled('licenses')) {
+            $coach->licenses()->createMany($request->input('licenses'));
         }
 
         // Create tournaments
-        if (! empty($validated['tournaments'])) {
-            $coach->tournaments()->createMany($validated['tournaments']);
+        if ($request->filled('tournaments')) {
+            $coach->tournaments()->createMany($request->input('tournaments'));
         }
 
         return $this->sendResponse(
@@ -79,27 +85,33 @@ class CoachController extends BaseController
         }
 
         $validated = $request->validated();
+        $image = $request->file('image');
+        unset($validated['image'], $validated['group_ids'], $validated['licenses'], $validated['tournaments']);
 
         $coach->update($validated);
 
+        if ($image) {
+            $coach->uploadFile($image, 'image', 'coaches');
+        }
+
         // Sync many-to-many groups
-        if (isset($validated['group_ids'])) {
-            $coach->groups()->sync($validated['group_ids']);
+        if ($request->has('group_ids')) {
+            $coach->groups()->sync($request->input('group_ids'));
         }
 
         // Replace licenses if provided
-        if (isset($validated['licenses'])) {
+        if ($request->has('licenses')) {
             $coach->licenses()->delete();
-            if (! empty($validated['licenses'])) {
-                $coach->licenses()->createMany($validated['licenses']);
+            if ($request->filled('licenses')) {
+                $coach->licenses()->createMany($request->input('licenses'));
             }
         }
 
         // Replace tournaments if provided
-        if (isset($validated['tournaments'])) {
+        if ($request->has('tournaments')) {
             $coach->tournaments()->delete();
-            if (! empty($validated['tournaments'])) {
-                $coach->tournaments()->createMany($validated['tournaments']);
+            if ($request->filled('tournaments')) {
+                $coach->tournaments()->createMany($request->input('tournaments'));
             }
         }
 

@@ -12,6 +12,7 @@ class Player extends Authenticatable implements JWTSubject
 
     protected $fillable = [
         'first_name',
+        'parent_id',
         'last_name',
         'email',
         'phone',
@@ -99,6 +100,21 @@ class Player extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Academy::class, 'academy_favorites')
             ->withTimestamps();
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Player::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Player::class, 'parent_id');
+    }
+
+    public function coachReviews()
+    {
+        return $this->hasMany(CoachReview::class);
     }
 
     public function getFullNameAttribute()

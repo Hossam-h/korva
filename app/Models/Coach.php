@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\BelongsToAcademy;
+use App\Traits\HasFileAttachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Coach extends Model
 {
     use BelongsToAcademy;
+    use HasFileAttachment;
 
     protected $fillable = [
         'academy_id',
@@ -18,8 +20,8 @@ class Coach extends Model
         'email',
         'training_category',
         'bio',
+        'image',
     ];
-
 
     public function groups(): BelongsToMany
     {
@@ -34,5 +36,20 @@ class Coach extends Model
     public function tournaments(): HasMany
     {
         return $this->hasMany(CoachTournament::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(CoachReview::class);
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->getFileUrl('image');
+    }
+
+    protected function getFileFields(): array
+    {
+        return ['image'];
     }
 }

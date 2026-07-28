@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Academy\AcademyAcademicSettingController;
 use App\Http\Controllers\Api\Academy\AcademyGeneralSettingController;
+use App\Http\Controllers\Api\Academy\AcademyServiceController;
 use App\Http\Controllers\Api\Academy\AuthController;
 use App\Http\Controllers\Api\Academy\CoachController;
 use App\Http\Controllers\Api\Academy\FieldController;
@@ -58,5 +59,8 @@ Route::group([
 
         // Payment Providers
         Route::get('payment-providers', [PaymentProviderController::class, 'index']);
+
+        // Services displayed in the player academy profile
+        Route::apiResource('services', AcademyServiceController::class);
     });
 });

@@ -22,12 +22,17 @@ class Academy extends Authenticatable implements JWTSubject
         'email',
         'phone',
         'age_group',
+        'min_age',
+        'max_age',
+        'accepted_genders',
         'country',
         'city',
         'address',
+        'description',
         'image',
         'latitude',
         'longitude',
+        'currency',
         'owner_name',
         'business_owner_email',
         'business_owner_phone',
@@ -47,6 +52,7 @@ class Academy extends Authenticatable implements JWTSubject
         'is_active' => 'boolean',
         'latitude' => 'float',
         'longitude' => 'float',
+        'accepted_genders' => 'array',
     ];
 
     /**
@@ -109,6 +115,16 @@ class Academy extends Authenticatable implements JWTSubject
         return $this->hasMany(Coach::class);
     }
 
+    public function services()
+    {
+        return $this->hasMany(AcademyService::class);
+    }
+
+    public function operatingHours()
+    {
+        return $this->hasMany(AcademyOperatingHour::class);
+    }
+
     /** All bookings received by this academy. */
     public function bookings()
     {
@@ -129,27 +145,26 @@ class Academy extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Starting price for list cards: cheapest group session_price.
-     * Prefers `groups_min_session_price` from withMin() when present.
+     * Starting monthly price for list cards.
      */
     public function getPriceAttribute(): ?float
     {
-        if (array_key_exists('groups_min_session_price', $this->attributes)) {
-            $value = $this->attributes['groups_min_session_price'];
+        if (array_key_exists('groups_min_monthly_price', $this->attributes)) {
+            $value = $this->attributes['groups_min_monthly_price'];
 
             return $value !== null ? (float) $value : null;
         }
 
         if ($this->relationLoaded('groups')) {
             $min = $this->groups
-                ->pluck('session_price')
+                ->pluck('monthly_price')
                 ->filter(fn ($p) => $p !== null)
                 ->min();
 
             return $min !== null ? (float) $min : null;
         }
 
-        $min = $this->groups()->whereNotNull('session_price')->min('session_price');
+        $min = $this->groups()->whereNotNull('monthly_price')->min('monthly_price');
 
         return $min !== null ? (float) $min : null;
     }
@@ -178,6 +193,26 @@ class Academy extends Authenticatable implements JWTSubject
         );
 
         return (int) max(1, round(($distanceKm / self::TRAVEL_SPEED_KMH) * 60));
+    }
+
+    public function getDistanceAttribute(): ?float
+    {
+        if ($this->latitude === null || $this->longitude === null) {
+            return null;
+        }
+
+        [$lat, $lng] = $this->resolveViewerCoordinates();
+
+        if ($lat === null || $lng === null) {
+            return null;
+        }
+
+        return round($this->haversineKm(
+            (float) $lat,
+            (float) $lng,
+            (float) $this->latitude,
+            (float) $this->longitude
+        ), 1);
     }
 
     /** Whether the authenticated player has favorited this academy. */
