@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Academy;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateCoachRequest extends FormRequest
 {
@@ -17,7 +18,12 @@ class UpdateCoachRequest extends FormRequest
             // Coach fields
             'full_name' => 'sometimes|string|max:255',
             'phone' => 'sometimes|nullable|string|max:30',
-            'email' => 'sometimes|nullable|email|max:255',
+            'email' => [
+                'sometimes', 'nullable', 'email', 'max:255',
+                Rule::unique('coaches')
+                    ->where('academy_id', auth('academy')->id())
+                    ->ignore($this->route('coach')),
+            ],
             'training_category' => 'sometimes|nullable|string|max:255',
             'bio' => 'sometimes|nullable|string',
             'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
