@@ -18,8 +18,8 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/korva-app:latest \
-                        -t ${{ secrets.DOCKER_USERNAME }}/korva-app:v${{ github.run_number }} \
-                        -f docker/php/Dockerfile .
+                       -t ${{ secrets.DOCKER_USERNAME }}/korva-app:v${{ github.run_number }} \
+                       -f docker/php/Dockerfile .
 
       - name: Push to Docker Hub
         run: |
@@ -33,14 +33,33 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            set -e
             cd /var/www/html/korva
+
+            # Pull latest image
             docker pull hossamdocker12/korva-app:latest
+
+            # Replace running containers with new image
             docker-compose -f docker-compose.prod.yml down
             docker-compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            # Wait for PHP-FPM to be fully ready before running artisan
+            echo "Waiting for app container..."
+            sleep 8
+
+            # Run pending migrations
             docker-compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
+
+            # Clear ALL stale caches first (prevents stale route/config cache causing 404s)
+            docker-compose -f docker-compose.prod.yml exec -T app php artisan optimize:clear
+
+            # Rebuild all caches fresh
             docker-compose -f docker-compose.prod.yml exec -T app php artisan config:cache
             docker-compose -f docker-compose.prod.yml exec -T app php artisan route:cache
-            docker-compose -f docker-compose.prod.yml exec -T app chmod -R 775 storage
+            docker-compose -f docker-compose.prod.yml exec -T app php artisan event:cache
+
+            # Fix storage permissions
+            docker-compose -f docker-compose.prod.yml exec -T -u root app chmod -R 775 storage
             docker-compose -f docker-compose.prod.yml exec -T -u root app chown -R www-data:www-data storage
 
-
+            echo "Deploy complete."
