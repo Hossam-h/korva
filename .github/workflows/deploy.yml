@@ -36,6 +36,9 @@ jobs:
             set -e
             cd /var/www/html/korva
 
+            # Free disk space: remove dangling images and stopped containers
+            docker system prune -f || true
+
             # Pull latest image
             docker pull hossamdocker12/korva-app:latest
 
