@@ -77,7 +77,9 @@ class AcademyController extends BaseController
         }
 
         if ($request->filled('rating')) {
-            $query->having('reviews_avg_rating', '>=', $request->rating);
+            // Filter by minimum average rating. Academies with no reviews have NULL avg
+            // so they are naturally excluded when a minimum rating is specified.
+            $query->havingRaw('COALESCE(reviews_avg_rating, 0) >= ?', [(float) $request->rating]);
         }
 
         if ($request->filled('training_days')) {
@@ -92,14 +94,16 @@ class AcademyController extends BaseController
         }
 
         if ($request->filled('training_time')) {
-            $query->whereHas('groups', function ($groupQuery) use ($request) {
-                match ($request->training_time) {
-                    'morning' => $groupQuery->whereTime('start_time', '<', '12:00:00'),
-                    'afternoon' => $groupQuery
-                        ->whereTime('start_time', '>=', '12:00:00')
-                        ->whereTime('start_time', '<', '17:00:00'),
-                    'evening' => $groupQuery->whereTime('start_time', '>=', '17:00:00'),
-                };
+            $time = $request->training_time;
+            $query->whereHas('groups', function ($groupQuery) use ($time) {
+                if ($time === 'morning') {
+                    $groupQuery->whereTime('start_time', '<', '12:00:00');
+                } elseif ($time === 'afternoon') {
+                    $groupQuery->whereTime('start_time', '>=', '12:00:00')
+                        ->whereTime('start_time', '<', '17:00:00');
+                } elseif ($time === 'evening') {
+                    $groupQuery->whereTime('start_time', '>=', '17:00:00');
+                }
             });
         }
 
@@ -112,29 +116,45 @@ class AcademyController extends BaseController
             });
         }
 
+        // Age overlap: show academies whose accepted age range overlaps the requested range.
+        // Null min_age/max_age on the academy means no restriction on that bound.
         if ($request->filled('min_age')) {
-            $query->where(function ($ageQuery) use ($request) {
-                $ageQuery->whereNull('max_age')->orWhere('max_age', '>=', $request->integer('min_age'));
+            // Academy must accept players as young as min_age:
+            //   academy.max_age IS NULL (no upper limit) OR academy.max_age >= requested_min
+            $query->where(function ($q) use ($request) {
+                $q->whereNull('max_age')
+                    ->orWhere('max_age', '>=', $request->integer('min_age'));
             });
         }
 
         if ($request->filled('max_age')) {
-            $query->where(function ($ageQuery) use ($request) {
-                $ageQuery->whereNull('min_age')->orWhere('min_age', '<=', $request->integer('max_age'));
+            // Academy must accept players as old as max_age:
+            //   academy.min_age IS NULL (no lower limit) OR academy.min_age <= requested_max
+            $query->where(function ($q) use ($request) {
+                $q->whereNull('min_age')
+                    ->orWhere('min_age', '<=', $request->integer('max_age'));
             });
         }
 
-        if ($request->filled('min_price') || $request->filled('max_price')) {
-            $query
-                ->when($request->filled('min_price'), fn ($q) => $q->having('groups_min_monthly_price', '>=', $request->input('min_price')))
-                ->when($request->filled('max_price'), fn ($q) => $q->having('groups_min_monthly_price', '<=', $request->input('max_price')));
+        // Price filter: use whereHas so academies with no groups are excluded cleanly,
+        // and the range checks against each group's price (not just the minimum).
+        if ($request->filled('min_price')) {
+            $query->whereHas('groups', fn ($g) => $g->where('monthly_price', '>=', (float) $request->input('min_price')));
         }
 
-        match ($request->input('sort', 'all')) {
-            'most_popular' => $query->orderByDesc('bookings_count'),
-            'top_rated' => $query->orderByDesc('reviews_avg_rating'),
-            'newest', 'all' => $query->latest(),
-        };
+        if ($request->filled('max_price')) {
+            $query->whereHas('groups', fn ($g) => $g->where('monthly_price', '<=', (float) $request->input('max_price')));
+        }
+
+        $sort = $request->input('sort', 'all');
+        if ($sort === 'most_popular') {
+            $query->orderByDesc('bookings_count');
+        } elseif ($sort === 'top_rated') {
+            $query->orderByDesc('reviews_avg_rating');
+        } else {
+            // 'newest' | 'all' | default
+            $query->latest();
+        }
 
         $perPage = $request->input('per_page', 15);
         $academies = $query->paginate($perPage);

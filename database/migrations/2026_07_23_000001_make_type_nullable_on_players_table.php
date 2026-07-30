@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -13,12 +14,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE players MODIFY type ENUM('parent', 'player') NULL");
+        Schema::table('players', function (Blueprint $table) {
+            // SQLite-compatible: change() works on both MySQL and SQLite in Laravel
+            $table->string('type')->nullable()->change();
+        });
     }
 
     public function down(): void
     {
-        DB::statement("UPDATE players SET type = 'player' WHERE type IS NULL");
-        DB::statement("ALTER TABLE players MODIFY type ENUM('parent', 'player') NOT NULL");
+        Schema::table('players', function (Blueprint $table) {
+            $table->string('type')->nullable(false)->change();
+        });
     }
 };
